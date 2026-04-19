@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
@@ -172,6 +172,11 @@ def admin():
 # ═══════════════════════════════════════════════════
 # ROUTES AUTH
 # ═══════════════════════════════════════════════════
+
+
+@app.route('/static/<path:filename>')
+def static_files(filename):
+    return send_from_directory('static', filename)
 
 @app.route('/api/auth/inscription', methods=['POST'])
 def inscription():
