@@ -146,7 +146,7 @@ class Technicien(db.Model):
 
 @app.route('/')
 def accueil():
-    return jsonify({'message': 'GabJob API fonctionne !'})
+    return open('gabjob.html', encoding='utf-8').read()
 
 @app.route('/gabjob')
 def gabjob():
