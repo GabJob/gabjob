@@ -16,6 +16,10 @@ db = SQLAlchemy(app)
 jwt = JWTManager(app)
 CORS(app)
 
+# ═══════════════════════════════════════════════════
+# MODÈLES
+# ═══════════════════════════════════════════════════
+
 class Utilisateur(db.Model):
     __tablename__ = 'utilisateurs'
     id        = db.Column(db.Integer, primary_key=True)
@@ -28,6 +32,7 @@ class Utilisateur(db.Model):
     quartier  = db.Column(db.String(100))
     actif     = db.Column(db.Boolean, default=True)
     cree_le   = db.Column(db.DateTime, default=datetime.utcnow)
+
 
 class Prestataire(db.Model):
     __tablename__ = 'prestataires'
@@ -57,6 +62,7 @@ class Prestataire(db.Model):
             'note_moyenne': self.note_moyenne
         }
 
+
 class Mission(db.Model):
     __tablename__ = 'missions'
     id                = db.Column(db.Integer, primary_key=True)
@@ -83,6 +89,7 @@ class Mission(db.Model):
             'cree_le': self.cree_le.strftime('%Y-%m-%d %H:%M')
         }
 
+
 class OTPSession(db.Model):
     __tablename__ = 'otp_sessions'
     id        = db.Column(db.Integer, primary_key=True)
@@ -93,12 +100,58 @@ class OTPSession(db.Model):
     cree_le   = db.Column(db.DateTime, default=datetime.utcnow)
 
 
+class Technicien(db.Model):
+    __tablename__ = 'techniciens'
+    id               = db.Column(db.Integer, primary_key=True)
+    nom              = db.Column(db.String(100), nullable=False)
+    prenom           = db.Column(db.String(100))
+    telephone        = db.Column(db.String(20), unique=True, nullable=False)
+    specialite       = db.Column(db.String(50), nullable=False)
+    zone             = db.Column(db.String(100))
+    tarif            = db.Column(db.Integer)
+    experience       = db.Column(db.String(20))
+    description      = db.Column(db.Text)
+    photo_url        = db.Column(db.String(255))
+    note             = db.Column(db.Float, default=0.0)
+    nb_avis          = db.Column(db.Integer, default=0)
+    disponible       = db.Column(db.Boolean, default=True)
+    verifie          = db.Column(db.Boolean, default=False)
+    abonnement_actif = db.Column(db.Boolean, default=False)
+    abonnement_fin   = db.Column(db.DateTime)
+    cree_le          = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'nom': self.nom,
+            'prenom': self.prenom or '',
+            'telephone': self.telephone,
+            'specialite': self.specialite,
+            'zone': self.zone or '',
+            'tarif': self.tarif,
+            'experience': self.experience or '',
+            'description': self.description or '',
+            'note': self.note,
+            'nb_avis': self.nb_avis,
+            'disponible': self.disponible,
+            'verifie': self.verifie,
+            'abonnement_actif': self.abonnement_actif,
+            'cree_le': self.cree_le.strftime('%Y-%m-%dT%H:%M:%S')
+        }
+
+
+# ═══════════════════════════════════════════════════
+# ROUTES PAGES HTML
+# ═══════════════════════════════════════════════════
+
 @app.route('/')
 def accueil():
     return jsonify({'message': 'GabJob API fonctionne !'})
+
 @app.route('/gabjob')
 def gabjob():
     return open('gabjob.html', encoding='utf-8').read()
+
 @app.route('/dashboard')
 def dashboard():
     return open('dashboard.html', encoding='utf-8').read()
@@ -107,6 +160,18 @@ def dashboard():
 def dashboard_recruteur():
     return open('dashboard-recruteur.html', encoding='utf-8').read()
 
+@app.route('/depannage')
+def depannage():
+    return open('depannage.html', encoding='utf-8').read()
+
+@app.route('/admin')
+def admin():
+    return open('admin.html', encoding='utf-8').read()
+
+
+# ═══════════════════════════════════════════════════
+# ROUTES AUTH
+# ═══════════════════════════════════════════════════
 
 @app.route('/api/auth/inscription', methods=['POST'])
 def inscription():
@@ -183,6 +248,10 @@ def verifier_otp():
     }), 200
 
 
+# ═══════════════════════════════════════════════════
+# ROUTES PRESTATAIRES
+# ═══════════════════════════════════════════════════
+
 @app.route('/api/prestataires/', methods=['GET'])
 def liste_prestataires():
     categorie = request.args.get('categorie')
@@ -223,6 +292,10 @@ def creer_profil():
     db.session.commit()
     return jsonify({'message': 'Profil cree', 'id': prestataire.id}), 201
 
+
+# ═══════════════════════════════════════════════════
+# ROUTES MISSIONS
+# ═══════════════════════════════════════════════════
 
 @app.route('/api/missions/', methods=['POST'])
 @jwt_required()
@@ -268,6 +341,136 @@ def accepter_mission(id):
     db.session.commit()
     return jsonify({'message': 'Mission acceptee'}), 200
 
+
+# ═══════════════════════════════════════════════════
+# ROUTES TECHNICIENS (DÉPANNAGE)
+# ═══════════════════════════════════════════════════
+
+@app.route('/api/techniciens/inscription', methods=['POST'])
+def inscription_technicien():
+    data = request.get_json(force=True, silent=True)
+    if not data:
+        return jsonify({'erreur': 'JSON invalide'}), 400
+    if not data.get('nom') or not data.get('telephone') or not data.get('specialite'):
+        return jsonify({'erreur': 'nom, telephone et specialite obligatoires'}), 400
+    existant = Technicien.query.filter_by(telephone=data['telephone']).first()
+    if existant:
+        return jsonify({'erreur': 'Numero deja inscrit', 'id': existant.id}), 409
+    tech = Technicien(
+        nom=data['nom'],
+        prenom=data.get('prenom', ''),
+        telephone=data['telephone'],
+        specialite=data['specialite'],
+        zone=data.get('zone', ''),
+        tarif=data.get('tarif'),
+        experience=data.get('experience', ''),
+        description=data.get('description', ''),
+        abonnement_actif=False
+    )
+    db.session.add(tech)
+    db.session.commit()
+    return jsonify({'message': 'Inscription reussie', 'id': tech.id}), 201
+
+
+@app.route('/api/techniciens/', methods=['GET'])
+def liste_techniciens():
+    specialite = request.args.get('specialite')
+    zone = request.args.get('zone')
+    query = Technicien.query.filter_by(abonnement_actif=True, disponible=True)
+    if specialite:
+        query = query.filter_by(specialite=specialite)
+    if zone:
+        query = query.filter(Technicien.zone.ilike(f'%{zone}%'))
+    techs = query.order_by(Technicien.note.desc()).all()
+    return jsonify([t.to_dict() for t in techs]), 200
+
+
+@app.route('/api/techniciens/<int:id>', methods=['GET'])
+def profil_technicien(id):
+    tech = Technicien.query.get_or_404(id)
+    return jsonify(tech.to_dict()), 200
+
+
+@app.route('/api/techniciens/<int:id>/activer', methods=['POST'])
+def activer_technicien(id):
+    tech = Technicien.query.get_or_404(id)
+    tech.abonnement_actif = True
+    tech.abonnement_fin = datetime.utcnow() + timedelta(days=30)
+    db.session.commit()
+    return jsonify({'message': 'Abonnement active', 'fin': tech.abonnement_fin.strftime('%Y-%m-%d')}), 200
+
+
+@app.route('/api/techniciens/<int:id>/desactiver', methods=['POST'])
+def desactiver_technicien(id):
+    tech = Technicien.query.get_or_404(id)
+    tech.abonnement_actif = False
+    db.session.commit()
+    return jsonify({'message': 'Abonnement desactive'}), 200
+
+
+# ═══════════════════════════════════════════════════
+# ROUTES ADMIN
+# ═══════════════════════════════════════════════════
+
+@app.route('/api/admin/stats', methods=['GET'])
+def admin_stats():
+    candidats = Utilisateur.query.filter_by(type='candidat').count()
+    recruteurs = Utilisateur.query.filter_by(type='recruteur').count()
+    offres = Mission.query.count()
+    techniciens = Technicien.query.count()
+    return jsonify({
+        'candidats': candidats,
+        'recruteurs': recruteurs,
+        'offres': offres,
+        'techniciens': techniciens
+    }), 200
+
+
+@app.route('/api/admin/utilisateurs', methods=['GET'])
+def admin_utilisateurs():
+    type_filtre = request.args.get('type')
+    if type_filtre:
+        users = Utilisateur.query.filter_by(type=type_filtre).order_by(Utilisateur.cree_le.desc()).all()
+    else:
+        users = Utilisateur.query.order_by(Utilisateur.cree_le.desc()).all()
+    return jsonify([{
+        'id': u.id,
+        'nom': u.nom,
+        'prenom': u.prenom or '',
+        'telephone': u.telephone,
+        'email': u.email or '',
+        'type': u.type,
+        'quartier': u.quartier or '',
+        'actif': u.actif,
+        'cree_le': u.cree_le.strftime('%Y-%m-%dT%H:%M:%S')
+    } for u in users]), 200
+
+
+@app.route('/api/admin/utilisateurs/<int:id>', methods=['DELETE'])
+def admin_supprimer_utilisateur(id):
+    user = Utilisateur.query.get_or_404(id)
+    db.session.delete(user)
+    db.session.commit()
+    return jsonify({'message': 'Utilisateur supprime'}), 200
+
+
+@app.route('/api/admin/techniciens', methods=['GET'])
+def admin_techniciens():
+    techs = Technicien.query.order_by(Technicien.cree_le.desc()).all()
+    return jsonify([t.to_dict() for t in techs]), 200
+
+
+@app.route('/api/admin/techniciens/<int:id>', methods=['DELETE'])
+def admin_supprimer_technicien(id):
+    tech = Technicien.query.get_or_404(id)
+    db.session.delete(tech)
+    db.session.commit()
+    return jsonify({'message': 'Technicien supprime'}), 200
+
+
+# ═══════════════════════════════════════════════════
+# DÉMARRAGE
+# ═══════════════════════════════════════════════════
 
 if __name__ == '__main__':
     with app.app_context():
