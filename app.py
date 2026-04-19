@@ -178,6 +178,18 @@ def admin():
 def static_files(filename):
     return send_from_directory('static', filename)
 
+@app.route('/about')
+def about():
+    return open('about.html', encoding='utf-8').read()
+
+@app.route('/conditions')
+def conditions():
+    return open('conditions.html', encoding='utf-8').read()
+
+@app.route('/contact')
+def contact():
+    return open('contact.html', encoding='utf-8').read()
+
 @app.route('/api/auth/inscription', methods=['POST'])
 def inscription():
     data = request.get_json(force=True, silent=True)
