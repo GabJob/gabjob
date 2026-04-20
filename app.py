@@ -162,16 +162,10 @@ def dashboard_recruteur():
 
 @app.route('/depannage')
 def depannage():
-    return open('depannage.html', encoding='utf-8').read()
-
+    return open('depannage-2.html', encoding='utf-8').read()
 @app.route('/admin')
 def admin():
     return open('admin.html', encoding='utf-8').read()
-
-
-# ═══════════════════════════════════════════════════
-# ROUTES AUTH
-# ═══════════════════════════════════════════════════
 
 
 @app.route('/static/<path:filename>')
@@ -189,6 +183,11 @@ def conditions():
 @app.route('/contact')
 def contact():
     return open('contact.html', encoding='utf-8').read()
+
+
+# ═══════════════════════════════════════════════════
+# ROUTES AUTH
+# ═══════════════════════════════════════════════════
 
 @app.route('/api/auth/inscription', methods=['POST'])
 def inscription():

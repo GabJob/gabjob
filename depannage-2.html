@@ -165,6 +165,23 @@
     .sdot.todo { background: var(--border); color: var(--text3); }
     .sline { flex: 1; height: 2px; background: var(--border); transition: background 0.3s; }
     .sline.done { background: var(--green); }
+
+    /* UPLOAD MEDIA */
+    .media-upload-zone { border: 2px dashed var(--border2); border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.2s; background: var(--bg); margin-bottom: 10px; }
+    .media-upload-zone:hover { border-color: var(--orange); background: rgba(249,115,22,0.05); }
+    .media-upload-zone.dragover { border-color: var(--orange); background: rgba(249,115,22,0.08); }
+    .media-upload-icon { font-size: 2rem; margin-bottom: 8px; }
+    .media-upload-text { font-size: 0.78rem; color: var(--text2); line-height: 1.5; }
+    .media-upload-text strong { color: var(--orange); }
+    .media-previews { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
+    .media-preview-item { position: relative; border-radius: 9px; overflow: hidden; aspect-ratio: 1; background: var(--surface2); }
+    .media-preview-item img { width: 100%; height: 100%; object-fit: cover; }
+    .media-preview-item video { width: 100%; height: 100%; object-fit: cover; }
+    .media-preview-del { position: absolute; top: 4px; right: 4px; background: rgba(239,68,68,0.9); color: #fff; border: none; width: 20px; height: 20px; border-radius: 50%; font-size: 0.7rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .media-count { font-size: 0.72rem; color: var(--text2); margin-top: 6px; text-align: center; }
+    .media-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+    .mtab { flex: 1; padding: 8px; border: 1px solid var(--border2); border-radius: 8px; text-align: center; cursor: pointer; font-size: 0.78rem; font-weight: 600; color: var(--text2); transition: all 0.2s; background: var(--surface2); }
+    .mtab.active { border-color: var(--orange); color: var(--orange); background: rgba(249,115,22,0.08); }
     .fstep { display: none; }
     .fstep.active { display: block; }
     .fg { margin-bottom: 12px; }
@@ -510,6 +527,28 @@
         <div class="fg"><label>Description de vos services</label>
           <textarea id="t-desc" rows="2" placeholder="Vos compétences et services proposés..."></textarea>
         </div>
+
+        <div class="fg">
+          <label>📸 Photos & Vidéos de vos travaux</label>
+          <div style="font-size:0.7rem;color:var(--text2);margin-bottom:10px;">Montrez vos réalisations pour inspirer confiance aux clients (max 6 fichiers)</div>
+          <div class="media-tabs">
+            <div class="mtab active" id="mtab-photo" onclick="switchMediaTab('photo')">📸 Photos</div>
+            <div class="mtab" id="mtab-video" onclick="switchMediaTab('video')">🎬 Vidéos</div>
+          </div>
+          <div class="media-upload-zone" id="photo-zone" onclick="document.getElementById('t-photos').click()" ondragover="dragOver(event)" ondrop="dropFiles(event,'photo')">
+            <input type="file" id="t-photos" accept="image/*" multiple style="display:none" onchange="handleMedia(this,'photo')">
+            <div class="media-upload-icon">📸</div>
+            <div class="media-upload-text">Cliquez ou glissez vos <strong>photos</strong> ici<br><span style="font-size:0.65rem;">JPG, PNG · Max 5MB par photo</span></div>
+          </div>
+          <div class="media-upload-zone" id="video-zone" style="display:none;" onclick="document.getElementById('t-videos').click()" ondragover="dragOver(event)" ondrop="dropFiles(event,'video')">
+            <input type="file" id="t-videos" accept="video/*" multiple style="display:none" onchange="handleMedia(this,'video')">
+            <div class="media-upload-icon">🎬</div>
+            <div class="media-upload-text">Cliquez ou glissez vos <strong>vidéos</strong> ici<br><span style="font-size:0.65rem;">MP4, MOV · Max 50MB par vidéo</span></div>
+          </div>
+          <div class="media-previews" id="media-previews"></div>
+          <div class="media-count" id="media-count"></div>
+        </div>
+
         <button class="btn-submit" onclick="step1()">Continuer vers le paiement →</button>
         <div class="msg" id="msg1"></div>
       </div>
@@ -712,6 +751,72 @@
   }
 
   renderTechs(techniciens);
+
+  // ── GESTION MÉDIAS ──
+  let mediaFiles = [];
+
+  function switchMediaTab(type) {
+    document.getElementById('mtab-photo').classList.remove('active');
+    document.getElementById('mtab-video').classList.remove('active');
+    document.getElementById('mtab-' + type).classList.add('active');
+    document.getElementById('photo-zone').style.display = type === 'photo' ? 'block' : 'none';
+    document.getElementById('video-zone').style.display = type === 'video' ? 'block' : 'none';
+  }
+
+  function dragOver(e) {
+    e.preventDefault();
+    e.currentTarget.classList.add('dragover');
+  }
+
+  function dropFiles(e, type) {
+    e.preventDefault();
+    e.currentTarget.classList.remove('dragover');
+    const files = Array.from(e.dataTransfer.files);
+    addMediaFiles(files, type);
+  }
+
+  function handleMedia(input, type) {
+    const files = Array.from(input.files);
+    addMediaFiles(files, type);
+    input.value = '';
+  }
+
+  function addMediaFiles(files, type) {
+    if (mediaFiles.length >= 6) {
+      toast('Maximum 6 fichiers autorisés');
+      return;
+    }
+    files.forEach(file => {
+      if (mediaFiles.length >= 6) return;
+      const maxSize = type === 'video' ? 50 * 1024 * 1024 : 5 * 1024 * 1024;
+      if (file.size > maxSize) {
+        toast('Fichier trop volumineux : ' + file.name);
+        return;
+      }
+      mediaFiles.push({ file, type });
+      renderMediaPreviews();
+    });
+  }
+
+  function renderMediaPreviews() {
+    const container = document.getElementById('media-previews');
+    const count = document.getElementById('media-count');
+    container.innerHTML = mediaFiles.map((m, i) => {
+      const url = URL.createObjectURL(m.file);
+      if (m.type === 'photo') {
+        return '<div class="media-preview-item"><img src="' + url + '" alt="photo"><button class="media-preview-del" onclick="removeMedia(' + i + ')">✕</button></div>';
+      } else {
+        return '<div class="media-preview-item"><video src="' + url + '" muted></video><button class="media-preview-del" onclick="removeMedia(' + i + ')">✕</button><div style="position:absolute;bottom:4px;left:4px;background:rgba(0,0,0,0.6);color:#fff;font-size:0.6rem;padding:2px 5px;border-radius:4px;">🎬</div></div>';
+      }
+    }).join('');
+    count.textContent = mediaFiles.length > 0 ? mediaFiles.length + '/6 fichier(s) ajouté(s)' : '';
+  }
+
+  function removeMedia(index) {
+    mediaFiles.splice(index, 1);
+    renderMediaPreviews();
+  }
+
 </script>
 </body>
 </html>
