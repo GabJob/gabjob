@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GabJob — Dashboard Recruteur</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #050508; --surface: #0e0e14; --surface2: #16161f; --surface3: #1e1e2a;
+      --border: #22222e; --border2: #2e2e3e;
+      --gold: #c9a84c; --gold2: #f0c96a; --gold3: #8a6a20;
+      --green: #1db954; --blue: #3b82f6; --red: #ef4444; --orange: #f97316;
+      --text: #f4f4f8; --text2: #7777a0; --text3: #4a4a6a;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; display: flex; }
+
+    /* SIDEBAR */
+    .sidebar { width: 250px; min-height: 100vh; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; }
+    .sidebar-logo { padding: 24px 20px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+    .logo-icon { width: 30px; height: 30px; background: linear-gradient(135deg, var(--gold), var(--gold2)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0; }
+    .logo-text { font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 800; }
+    .logo-text span { color: var(--gold2); }
+    .sidebar-user { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+    .avatar { width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, var(--blue), #60a5fa); display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 700; color: #fff; flex-shrink: 0; font-family: 'Syne', sans-serif; }
+    .user-info { flex: 1; min-width: 0; }
+    .user-name { font-size: 0.85rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .user-badge { font-size: 0.68rem; color: var(--blue); margin-top: 2px; }
+    .sidebar-nav { flex: 1; padding: 14px 10px; }
+    .nav-label { font-size: 0.62rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text3); padding: 0 10px; margin: 14px 0 6px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 9px; cursor: pointer; font-size: 0.85rem; font-weight: 500; color: var(--text2); transition: all 0.2s; margin-bottom: 2px; border: 1px solid transparent; }
+    .nav-item:hover { background: var(--surface2); color: var(--text); }
+    .nav-item.active { background: rgba(59,130,246,0.1); color: #60a5fa; border-color: rgba(59,130,246,0.2); }
+    .nav-item .ni { font-size: 0.95rem; width: 18px; text-align: center; }
+    .nav-badge { margin-left: auto; background: var(--red); color: #fff; font-size: 0.62rem; font-weight: 700; padding: 2px 6px; border-radius: 100px; }
+    .nav-badge.b { background: var(--blue); }
+    .sidebar-bottom { padding: 14px 10px; border-top: 1px solid var(--border); }
+    .premium-card { background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2); border-radius: 10px; padding: 14px; margin-bottom: 10px; }
+    .premium-card h4 { font-family: 'Syne', sans-serif; font-size: 0.82rem; font-weight: 700; color: #60a5fa; margin-bottom: 4px; }
+    .premium-card p { font-size: 0.72rem; color: var(--text2); line-height: 1.5; margin-bottom: 10px; }
+    .btn-premium { width: 100%; background: linear-gradient(135deg, var(--blue), #60a5fa); color: #fff; border: none; padding: 8px; border-radius: 7px; font-size: 0.75rem; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+
+    /* MAIN */
+    .main { margin-left: 250px; flex: 1; min-height: 100vh; }
+    .topbar { position: sticky; top: 0; z-index: 50; background: rgba(5,5,8,0.92); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 14px 28px; display: flex; align-items: center; justify-content: space-between; }
+    .topbar-title { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; }
+    .topbar-right { display: flex; align-items: center; gap: 10px; }
+    .notif-btn { width: 34px; height: 34px; border-radius: 9px; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; font-size: 0.95rem; }
+    .notif-dot { position: absolute; top: 5px; right: 5px; width: 7px; height: 7px; background: var(--red); border-radius: 50%; border: 2px solid var(--bg); }
+    .btn-new-offre { background: linear-gradient(135deg, var(--gold), var(--gold2)); color: #000; border: none; padding: 8px 16px; border-radius: 8px; font-size: 0.78rem; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+
+    /* CONTENT */
+    .content { padding: 28px; }
+    .page { display: none; animation: fadeUp 0.35s ease both; }
+    .page.active { display: block; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+
+    /* STATS */
+    .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 24px; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 13px; padding: 18px; position: relative; overflow: hidden; transition: border-color 0.2s; }
+    .stat-card:hover { border-color: var(--border2); }
+    .stat-icon { font-size: 1.3rem; margin-bottom: 10px; }
+    .stat-val { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; margin-bottom: 3px; }
+    .stat-label { font-size: 0.75rem; color: var(--text2); }
+    .stat-trend { position: absolute; top: 14px; right: 14px; font-size: 0.68rem; font-weight: 600; padding: 3px 7px; border-radius: 100px; }
+    .t-up { background: rgba(29,185,84,0.1); color: var(--green); }
+    .t-new { background: rgba(201,168,76,0.1); color: var(--gold); }
+    .t-blue { background: rgba(59,130,246,0.1); color: var(--blue); }
+
+    /* SEARCH CANDIDATS */
+    .search-bar { background: var(--surface); border: 1px solid var(--border); border-radius: 13px; padding: 20px; margin-bottom: 20px; }
+    .search-row { display: flex; gap: 10px; margin-bottom: 14px; }
+    .search-input { flex: 1; background: var(--surface2); border: 1px solid var(--border2); border-radius: 9px; padding: 10px 14px; color: var(--text); font-size: 0.875rem; font-family: 'DM Sans', sans-serif; outline: none; transition: border-color 0.2s; }
+    .search-input:focus { border-color: var(--blue); }
+    .btn-search { background: linear-gradient(135deg, var(--blue), #60a5fa); color: #fff; border: none; padding: 10px 20px; border-radius: 9px; font-size: 0.875rem; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; white-space: nowrap; }
+    .filters-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .f-select { background: var(--surface2); border: 1px solid var(--border2); border-radius: 8px; padding: 7px 12px; color: var(--text2); font-size: 0.78rem; font-family: 'DM Sans', sans-serif; outline: none; cursor: pointer; -webkit-appearance: none; }
+    .f-select:focus { border-color: var(--blue); }
+    .f-chip { background: var(--surface2); border: 1px solid var(--border); padding: 6px 14px; border-radius: 100px; font-size: 0.78rem; cursor: pointer; transition: all 0.2s; color: var(--text2); }
+    .f-chip:hover, .f-chip.active { border-color: var(--blue); color: var(--blue); background: rgba(59,130,246,0.08); }
+
+    /* CANDIDAT CARDS */
+    .candidats-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; }
+    .candidat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 13px; padding: 20px; transition: all 0.2s; cursor: pointer; }
+    .candidat-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+    .cc-top { display: flex; gap: 14px; margin-bottom: 14px; }
+    .cc-av { width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(135deg, var(--gold3), var(--gold)); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: 800; color: #000; font-family: 'Syne', sans-serif; flex-shrink: 0; }
+    .cc-info { flex: 1; }
+    .cc-name { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: 3px; }
+    .cc-poste { font-size: 0.78rem; color: var(--text2); margin-bottom: 6px; }
+    .cc-meta { display: flex; gap: 10px; flex-wrap: wrap; }
+    .cc-meta span { font-size: 0.72rem; color: var(--text3); }
+    .cc-match { font-size: 0.72rem; font-weight: 700; padding: 3px 9px; border-radius: 100px; }
+    .mh { background: rgba(29,185,84,0.1); color: var(--green); }
+    .mm { background: rgba(201,168,76,0.1); color: var(--gold); }
+    .ml { background: rgba(59,130,246,0.1); color: var(--blue); }
+    .cc-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 14px; }
+    .tag { background: var(--surface2); border: 1px solid var(--border); padding: 3px 10px; border-radius: 100px; font-size: 0.68rem; color: var(--text2); }
+    .tag.v { border-color: rgba(29,185,84,0.3); color: var(--green); background: rgba(29,185,84,0.08); }
+    .cc-bot { display: flex; gap: 8px; justify-content: flex-end; }
+    .btn-cv { background: var(--surface2); border: 1px solid var(--border2); color: var(--text); padding: 7px 13px; border-radius: 7px; font-size: 0.75rem; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+    .btn-cv:hover { border-color: var(--gold); color: var(--gold); }
+    .btn-wa { background: rgba(29,185,84,0.1); border: 1px solid rgba(29,185,84,0.3); color: var(--green); padding: 7px 13px; border-radius: 7px; font-size: 0.75rem; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+    .btn-wa:hover { background: rgba(29,185,84,0.2); }
+
+    /* OFFRES PUBLIEES */
+    .offre-pub { background: var(--surface); border: 1px solid var(--border); border-radius: 13px; padding: 18px; margin-bottom: 12px; display: flex; gap: 16px; align-items: flex-start; transition: border-color 0.2s; }
+    .offre-pub:hover { border-color: var(--border2); }
+    .op-status { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+    .op-active { background: var(--green); box-shadow: 0 0 8px rgba(29,185,84,0.4); }
+    .op-paused { background: var(--text3); }
+    .op-info { flex: 1; }
+    .op-title { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; margin-bottom: 5px; }
+    .op-meta { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+    .op-meta span { font-size: 0.72rem; color: var(--text2); }
+    .op-stats { display: flex; gap: 14px; }
+    .op-stat { font-size: 0.72rem; color: var(--text3); }
+    .op-stat strong { color: var(--text); }
+    .op-btns { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
+    .btn-sm { background: var(--surface2); border: 1px solid var(--border2); color: var(--text2); padding: 6px 12px; border-radius: 7px; font-size: 0.72rem; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; white-space: nowrap; }
+    .btn-sm:hover { border-color: var(--gold); color: var(--gold); }
+    .btn-sm.danger:hover { border-color: var(--red); color: var(--red); }
+
+    /* FORM OFFRE */
+    .fsect { background: var(--surface); border: 1px solid var(--border); border-radius: 13px; padding: 22px; margin-bottom: 18px; }
+    .fsect-title { font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+    .fgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .ffull { grid-column: 1/-1; }
+    .fg { display: flex; flex-direction: column; gap: 5px; }
+    label { font-size: 0.68rem; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; }
+    input, select, textarea { background: var(--surface2); border: 1px solid var(--border2); border-radius: 9px; padding: 10px 13px; color: var(--text); font-size: 0.875rem; font-family: 'DM Sans', sans-serif; outline: none; transition: border-color 0.2s; width: 100%; -webkit-appearance: none; resize: vertical; }
+    input:focus, select:focus, textarea:focus { border-color: var(--blue); }
+    select option { background: var(--surface2); }
+    .btn-save { background: linear-gradient(135deg, var(--gold), var(--gold2)); color: #000; border: none; padding: 12px 28px; border-radius: 9px; font-size: 0.9rem; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+    .btn-save:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    /* MODAL CV */
+    .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 200; align-items: center; justify-content: center; }
+    .modal-bg.open { display: flex; }
+    .modal { background: var(--surface); border: 1px solid var(--border2); border-radius: 18px; width: 90%; max-width: 560px; padding: 28px; position: relative; max-height: 90vh; overflow-y: auto; }
+    .modal-close { position: absolute; top: 16px; right: 16px; background: var(--surface2); border: 1px solid var(--border); width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.9rem; color: var(--text2); }
+    .modal-h { font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 800; margin-bottom: 6px; }
+    .modal-s { font-size: 0.82rem; color: var(--text2); margin-bottom: 20px; }
+    .cv-modal-av { width: 80px; height: 80px; border-radius: 20px; background: linear-gradient(135deg, var(--gold3), var(--gold)); display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800; color: #000; font-family: 'Syne', sans-serif; margin: 0 auto 16px; }
+    .cv-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.82rem; }
+    .cv-row:last-child { border-bottom: none; }
+    .cv-row-lbl { color: var(--text2); }
+    .cv-row-val { font-weight: 600; }
+    .skill-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+    .skill-pill { background: var(--surface2); border: 1px solid var(--border); padding: 4px 10px; border-radius: 100px; font-size: 0.72rem; color: var(--text2); }
+    .btn-wa-lg { width: 100%; background: rgba(29,185,84,0.1); border: 1px solid rgba(29,185,84,0.3); color: var(--green); padding: 12px; border-radius: 9px; font-size: 0.9rem; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; margin-top: 16px; transition: all 0.2s; }
+    .btn-wa-lg:hover { background: rgba(29,185,84,0.2); }
+
+    /* TOAST */
+    .toast { position: fixed; bottom: 28px; right: 28px; background: var(--surface2); border: 1px solid var(--border2); border-radius: 10px; padding: 12px 18px; font-size: 0.85rem; z-index: 999; transform: translateY(80px); opacity: 0; transition: all 0.3s; pointer-events: none; max-width: 300px; }
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    /* MESSAGES */
+    .msg-list { display: flex; flex-direction: column; gap: 10px; }
+    .msg-item { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; display: flex; gap: 12px; cursor: pointer; transition: border-color 0.2s; }
+    .msg-item:hover { border-color: var(--border2); }
+    .msg-item.unread { border-color: rgba(59,130,246,0.2); background: rgba(59,130,246,0.03); }
+    .msg-av { width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, var(--gold3), var(--gold)); display: flex; align-items: center; justify-content: center; font-weight: 700; color: #000; font-family: 'Syne', sans-serif; flex-shrink: 0; }
+    .msg-content { flex: 1; }
+    .msg-name { font-size: 0.875rem; font-weight: 600; margin-bottom: 3px; }
+    .msg-preview { font-size: 0.78rem; color: var(--text2); }
+    .msg-time { font-size: 0.68rem; color: var(--text3); margin-top: 4px; }
+    .msg-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--blue); flex-shrink: 0; margin-top: 6px; }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">💼</div>
+    <div class="logo-text">Gab<span>Job</span></div>
+  </div>
+  <div class="sidebar-user">
+    <div class="avatar" id="sb-av">A</div>
+    <div class="user-info">
+      <div class="user-name" id="sb-name">Akanda Corp</div>
+      <div class="user-badge">⭐ Recruteur Pro</div>
+    </div>
+  </div>
+  <div class="sidebar-nav">
+    <div class="nav-label">Principal</div>
+    <div class="nav-item active" onclick="go('accueil',this)"><span class="ni">🏠</span>Tableau de bord</div>
+    <div class="nav-item" onclick="go('candidats',this)"><span class="ni">👥</span>Chercher candidats</div>
+    <div class="nav-item" onclick="go('offres',this)"><span class="ni">📋</span>Mes offres<span class="nav-badge b">3</span></div>
+    <div class="nav-item" onclick="go('publier',this)"><span class="ni">✏️</span>Publier une offre</div>
+    <div class="nav-label">Activité</div>
+    <div class="nav-item" onclick="go('messages',this)"><span class="ni">💬</span>Messages<span class="nav-badge">2</span></div>
+    <div class="nav-item" onclick="go('candidatures',this)"><span class="ni">📥</span>Candidatures reçues<span class="nav-badge b">5</span></div>
+    <div class="nav-label">Compte</div>
+    <div class="nav-item" onclick="go('entreprise',this)"><span class="ni">🏢</span>Mon entreprise</div>
+    <div class="nav-item" onclick="go('abonnement',this)"><span class="ni">💳</span>Abonnement</div>
+  </div>
+  <div class="sidebar-bottom">
+    <div class="premium-card">
+      <h4>⚡ Pack Recruteur Pro</h4>
+      <p>Accès prioritaire aux meilleurs profils et filtrage avancé.</p>
+      <button class="btn-premium" onclick="go('abonnement',null)">Renouveler l'abonnement</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="tb-title">Tableau de bord</div>
+    <div class="topbar-right">
+      <button class="btn-new-offre" onclick="go('publier',null)">+ Publier une offre</button>
+      <div class="notif-btn">🔔<div class="notif-dot"></div></div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ACCUEIL -->
+    <div class="page active" id="page-accueil">
+      <div style="margin-bottom:20px;">
+        <h2 style="font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;margin-bottom:4px;">Bonjour, <span id="dash-name" style="color:#60a5fa">Akanda Corp</span> 👋</h2>
+        <p style="color:var(--text2);font-size:0.875rem;">Voici l'activité de recrutement de votre entreprise.</p>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-icon">👥</div><div class="stat-val" style="color:var(--blue)">247</div><div class="stat-label">Candidats disponibles</div><div class="stat-trend t-blue">+18 ce mois</div></div>
+        <div class="stat-card"><div class="stat-icon">📋</div><div class="stat-val" style="color:var(--gold2)">3</div><div class="stat-label">Offres publiées</div><div class="stat-trend t-new">2 actives</div></div>
+        <div class="stat-card"><div class="stat-icon">📥</div><div class="stat-val" style="color:var(--green)">28</div><div class="stat-label">Candidatures reçues</div><div class="stat-trend t-up">+5 cette semaine</div></div>
+        <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-val" style="color:var(--orange)">4</div><div class="stat-label">Recrutements réussis</div><div class="stat-trend t-up">Ce trimestre</div></div>
+      </div>
+
+      <!-- Profils récents -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+        <h3 style="font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:700;">Nouveaux profils correspondants</h3>
+        <span onclick="go('candidats',null)" style="font-size:0.78rem;color:var(--blue);cursor:pointer;">Voir tous →</span>
+      </div>
+      <div class="candidats-grid" id="dash-candidats"></div>
+
+      <!-- Offres actives -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin:24px 0 14px;">
+        <h3 style="font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:700;">Mes offres actives</h3>
+        <span onclick="go('offres',null)" style="font-size:0.78rem;color:var(--blue);cursor:pointer;">Gérer →</span>
+      </div>
+      <div id="dash-offres"></div>
+    </div>
+
+    <!-- CHERCHER CANDIDATS -->
+    <div class="page" id="page-candidats">
+      <div style="margin-bottom:16px;">
+        <h2 style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;">Rechercher des candidats</h2>
+        <p style="color:var(--text2);font-size:0.82rem;margin-top:4px;">247 candidats disponibles sur GabJob</p>
+      </div>
+      <div class="search-bar">
+        <div class="search-row">
+          <input class="search-input" type="text" id="search-q" placeholder="Comptable, Développeur, Chauffeur...">
+          <button class="btn-search" onclick="searchCandidats()">🔍 Rechercher</button>
+        </div>
+        <div class="filters-row">
+          <select class="f-select" id="f-categorie">
+            <option value="">Toutes catégories</option>
+            <option>Comptabilité / Finance</option>
+            <option>Informatique / Tech</option>
+            <option>Commerce / Vente</option>
+            <option>Santé</option>
+            <option>Droit / Juridique</option>
+            <option>BTP / Construction</option>
+            <option>Transport / Logistique</option>
+            <option>Enseignement</option>
+            <option>Administration</option>
+          </select>
+          <select class="f-select" id="f-diplome">
+            <option value="">Tout niveau</option>
+            <option>BEPC</option>
+            <option>BAC</option>
+            <option>BTS/DUT</option>
+            <option>Licence</option>
+            <option>Master</option>
+            <option>Doctorat</option>
+          </select>
+          <select class="f-select" id="f-quartier">
+            <option value="">Tout Libreville</option>
+            <option>Libreville Centre</option>
+            <option>Akanda</option>
+            <option>Hauts de Gué-Gué</option>
+            <option>Louis</option>
+            <option>Nzeng-Ayong</option>
+            <option>PK5 / PK8 / PK12</option>
+          </select>
+          <div class="f-chip active" onclick="toggleChip(this,'verifie')">✅ Vérifiés seulement</div>
+          <div class="f-chip" onclick="toggleChip(this,'premium')">⭐ Premium</div>
+          <div class="f-chip" onclick="toggleChip(this,'disponible')">🟢 Disponibles</div>
+        </div>
+      </div>
+      <div class="candidats-grid" id="all-candidats"></div>
+    </div>
+
+    <!-- MES OFFRES -->
+    <div class="page" id="page-offres">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+        <div>
+          <h2 style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;">Mes offres d'emploi</h2>
+          <p style="color:var(--text2);font-size:0.82rem;margin-top:4px;">3 offres publiées · 2 actives</p>
+        </div>
+        <button class="btn-save" onclick="go('publier',null)">+ Nouvelle offre</button>
+      </div>
+      <div id="offres-list"></div>
+    </div>
+
+    <!-- PUBLIER UNE OFFRE -->
+    <div class="page" id="page-publier">
+      <div style="margin-bottom:20px;">
+        <h2 style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;">Publier une offre d'emploi</h2>
+        <p style="color:var(--text2);font-size:0.82rem;margin-top:4px;">Votre offre sera visible par tous les candidats.</p>
+      </div>
+      <div class="fsect">
+        <div class="fsect-title"><span>📋</span>Informations principales</div>
+        <div class="fgrid">
+          <div class="fg ffull"><label>Titre du poste *</label><input type="text" id="o-titre" placeholder="Ex: Comptable Senior, Développeur Web..."></div>
+          <div class="fg"><label>Catégorie *</label>
+            <select id="o-categorie">
+              <option value="">Sélectionner</option>
+              <option>Comptabilité / Finance</option>
+              <option>Informatique / Tech</option>
+              <option>Commerce / Vente</option>
+              <option>Santé</option>
+              <option>Droit / Juridique</option>
+              <option>BTP / Construction</option>
+              <option>Transport / Logistique</option>
+              <option>Enseignement</option>
+              <option>Administration</option>
+            </select>
+          </div>
+          <div class="fg"><label>Type de contrat</label>
+            <select id="o-contrat">
+              <option>CDI</option><option>CDD</option>
+              <option>Stage</option><option>Freelance</option>
+              <option>Temps partiel</option>
+            </select>
+          </div>
+          <div class="fg"><label>Localisation</label><input type="text" id="o-lieu" placeholder="Libreville, Akanda..."></div>
+          <div class="fg"><label>Salaire (FCFA/mois)</label><input type="text" id="o-salaire" placeholder="Ex: 200 000 - 350 000"></div>
+          <div class="fg ffull"><label>Description du poste *</label><textarea id="o-desc" rows="4" placeholder="Décrivez le poste, les responsabilités, l'environnement de travail..."></textarea></div>
+          <div class="fg ffull"><label>Profil recherché</label><textarea id="o-profil" rows="3" placeholder="Expériences requises, qualités attendues..."></textarea></div>
+        </div>
+      </div>
+      <div class="fsect">
+        <div class="fsect-title"><span>🎓</span>Exigences</div>
+        <div class="fgrid">
+          <div class="fg"><label>Niveau d'études minimum</label>
+            <select id="o-diplome">
+              <option>Aucun requis</option><option>BEPC</option>
+              <option>BAC</option><option>BTS/DUT</option>
+              <option>Licence</option><option>Master</option>
+            </select>
+          </div>
+          <div class="fg"><label>Expérience minimum</label>
+            <select id="o-exp">
+              <option>Débutant accepté</option>
+              <option>1 an</option><option>2 ans</option>
+              <option>3 ans</option><option>5 ans+</option>
+            </select>
+          </div>
+          <div class="fg ffull"><label>Compétences requises (séparées par virgules)</label><input type="text" id="o-skills" placeholder="Excel, Comptabilité, SAGE..."></div>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;">
+        <button class="btn-save" onclick="publierOffre()">🚀 Publier l'offre</button>
+        <button style="background:var(--surface2);border:1px solid var(--border2);color:var(--text2);padding:12px 20px;border-radius:9px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.875rem;" onclick="go('offres',null)">Annuler</button>
+      </div>
+    </div>
+
+    <!-- CANDIDATURES REÇUES -->
+    <div class="page" id="page-candidatures">
+      <div style="margin-bottom:16px;">
+        <h2 style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;">Candidatures reçues</h2>
+        <p style="color:var(--text2);font-size:0.82rem;margin-top:4px;">28 candidatures · 5 non lues</p>
+      </div>
+      <div class="filters-row" style="margin-bottom:16px;">
+        <div class="f-chip active">Toutes</div>
+        <div class="f-chip">En attente</div>
+        <div class="f-chip">Acceptées</div>
+        <div class="f-chip">Refusées</div>
+      </div>
+      <div id="candidatures-list"></div>
+    </div>
+
+    <!-- MESSAGES -->
+    <div class="page" id="page-messages">
+      <div style="margin-bottom:16px;">
+        <h2 style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;">Messages</h2>
+        <p style="color:var(--text2);font-size:0.82rem;margin-top:4px;">2 messages non lus</p>
+      </div>
+      <div class="msg-list" id="msg-list"></div>
+    </div>
+
+    <!-- MON ENTREPRISE -->
+    <div class="page" id="page-entreprise">
+      <div style="margin-bottom:20px;">
+        <h2 style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;">Mon entreprise</h2>
+        <p style="color:var(--text2);font-size:0.82rem;margin-top:4px;">Informations visibles par les candidats.</p>
+      </div>
+      <div class="fsect">
+        <div class="fsect-title"><span>🏢</span>Informations entreprise</div>
+        <div class="fgrid">
+          <div class="fg"><label>Nom de l'entreprise *</label><input type="text" id="e-nom" placeholder="Akanda Corp SARL" value="Akanda Corp"></div>
+          <div class="fg"><label>Secteur d'activité</label>
+            <select id="e-secteur">
+              <option>Commerce / Distribution</option>
+              <option>BTP / Construction</option>
+              <option>Pétrole / Mines</option>
+              <option>Services / Conseil</option>
+              <option>Santé</option>
+              <option>Éducation</option>
+              <option>Finance / Banque</option>
+              <option>Transport / Logistique</option>
+              <option>Technologie</option>
+              <option>Agriculture</option>
+            </select>
+          </div>
+          <div class="fg"><label>Téléphone</label><input type="tel" id="e-tel" placeholder="074 00 00 00"></div>
+          <div class="fg"><label>Email professionnel</label><input type="email" id="e-email" placeholder="contact@entreprise.ga"></div>
+          <div class="fg"><label>Localisation</label><input type="text" id="e-lieu" placeholder="Libreville, Gabon"></div>
+          <div class="fg"><label>Taille entreprise</label>
+            <select id="e-taille">
+              <option>1 - 10 employés</option>
+              <option>11 - 50 employés</option>
+              <option>51 - 200 employés</option>
+              <option>200+ employés</option>
+            </select>
+          </div>
+          <div class="fg ffull"><label>Description de l'entreprise</label><textarea id="e-desc" rows="3" placeholder="Décrivez votre entreprise, vos activités, votre culture..."></textarea></div>
+        </div>
+      </div>
+      <button class="btn-save" onclick="saveEntreprise()">💾 Sauvegarder</button>
+    </div>
+
+    <!-- ABONNEMENT -->
+    <div class="page" id="page-abonnement">
+      <div style="margin-bottom:20px;">
+        <h2 style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;">Mon abonnement</h2>
+        <p style="color:var(--text2);font-size:0.82rem;margin-top:4px;">Gérez votre accès recruteur GabJob.</p>
+      </div>
+      <div style="background:var(--surface);border:1px solid rgba(59,130,246,0.3);border-radius:16px;padding:24px;margin-bottom:20px;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <div style="font-size:0.72rem;color:var(--blue);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">Abonnement actuel</div>
+            <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;margin-bottom:4px;">Pack Recruteur Pro</div>
+            <div style="font-size:0.82rem;color:var(--text2);">Expire le 31 Décembre 2026</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--blue);">150 000</div>
+            <div style="font-size:0.72rem;color:var(--text2);">FCFA / an</div>
+          </div>
+        </div>
+        <div style="height:1px;background:var(--border);margin:16px 0;"></div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+          <div style="text-align:center;"><div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--green);">247</div><div style="font-size:0.72rem;color:var(--text2);">Profils accessibles</div></div>
+          <div style="text-align:center;"><div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--gold2);">∞</div><div style="font-size:0.72rem;color:var(--text2);">Offres publiables</div></div>
+          <div style="text-align:center;"><div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--blue);">247</div><div style="font-size:0.72rem;color:var(--text2);">Contacts WhatsApp</div></div>
+        </div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;">
+        <div style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:16px;">Payer / Renouveler</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;" id="pay-methods">
+          <div class="pay-m" onclick="selPay(this)" style="background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:14px;cursor:pointer;text-align:center;transition:all 0.2s;">
+            <div style="font-size:1.4rem;margin-bottom:6px;">📱</div>
+            <div style="font-size:0.75rem;font-weight:600;">Airtel Money</div>
+          </div>
+          <div class="pay-m" onclick="selPay(this)" style="background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:14px;cursor:pointer;text-align:center;transition:all 0.2s;">
+            <div style="font-size:1.4rem;margin-bottom:6px;">💛</div>
+            <div style="font-size:0.75rem;font-weight:600;">Moov Money</div>
+          </div>
+          <div class="pay-m" onclick="selPay(this)" style="background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:14px;cursor:pointer;text-align:center;transition:all 0.2s;">
+            <div style="font-size:1.4rem;margin-bottom:6px;">🏦</div>
+            <div style="font-size:0.75rem;font-weight:600;">Virement bancaire</div>
+          </div>
+        </div>
+        <div id="pay-tel-field" style="margin-bottom:14px;">
+          <label>Numéro Mobile Money</label>
+          <input type="tel" id="pay-tel" placeholder="074 00 00 00" style="margin-top:6px;">
+        </div>
+        <button class="btn-save" style="width:100%;" onclick="processPayAbonnement()">💳 Payer 150 000 FCFA</button>
+        <div style="text-align:center;font-size:0.68rem;color:var(--text3);margin-top:8px;">Paiement sécurisé · Reçu envoyé par SMS</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL CV CANDIDAT -->
+<div class="modal-bg" id="modal-cv">
+  <div class="modal">
+    <div class="modal-close" onclick="closeCvModal()">✕</div>
+    <div class="cv-modal-av" id="modal-av">J</div>
+    <div style="text-align:center;margin-bottom:16px;">
+      <div class="modal-h" id="modal-nom">Jean-Baptiste Ondo</div>
+      <div class="modal-s" id="modal-poste">Comptable Senior · Libreville</div>
+    </div>
+    <div id="modal-details"></div>
+    <div class="skill-pills" id="modal-skills"></div>
+    <button class="btn-wa-lg" id="modal-wa-btn" onclick="contactWA()">💬 Contacter via WhatsApp</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const API = 'http://127.0.0.1:5000';
+  let currentWaTel = '';
+
+  // ─── DATA DEMO ───────────────────────────────────────
+  const candidats = [
+    { id:1, nom:'Jean-Baptiste Ondo', poste:'Comptable Senior', quartier:'Libreville Centre', diplome:'Master', exp:'5 ans', tel:'+24174111111', skills:['Comptabilité','Excel','SAGE','Finance'], match:92, verifie:true, premium:true },
+    { id:2, nom:'Marie Nguema', poste:'Développeuse Web', quartier:'Akanda', diplome:'Licence', exp:'3 ans', tel:'+24177222222', skills:['React','Python','JavaScript','MongoDB'], match:88, verifie:true, premium:false },
+    { id:3, nom:'Pierre Mba', poste:'Commercial BtoB', quartier:'Louis', diplome:'BTS/DUT', exp:'2 ans', tel:'+24166333333', skills:['Vente','Prospection','CRM','Négociation'], match:75, verifie:true, premium:true },
+    { id:4, nom:'Sylvie Obame', poste:'Infirmière Diplômée', quartier:'Nzeng-Ayong', diplome:'Licence', exp:'4 ans', tel:'+24174444444', skills:['Soins infirmiers','Urgences','Pédiatrie'], match:65, verifie:false, premium:false },
+    { id:5, nom:'Boris Nzamba', poste:'Chauffeur Poids Lourd', quartier:'PK8', diplome:'BEPC', exp:'7 ans', tel:'+24177555555', skills:['Conduite PL','Logistique','GPS'], match:80, verifie:true, premium:false },
+    { id:6, nom:'Fatou Diallo', poste:'Juriste d\'entreprise', quartier:'Hauts de Gué-Gué', diplome:'Master', exp:'3 ans', tel:'+24166666666', skills:['Droit OHADA','Contrats','Contentieux'], match:70, verifie:true, premium:true },
+  ];
+
+  const offres = [
+    { id:1, titre:'Comptable Général', categorie:'Comptabilité / Finance', lieu:'Libreville', contrat:'CDI', salaire:'250 000 FCFA', vues:124, candidatures:18, statut:'active', date:'Il y a 5 jours' },
+    { id:2, titre:'Commercial Terrain', categorie:'Commerce / Vente', lieu:'Libreville + déplacements', contrat:'CDI', salaire:'180 000 + commissions', vues:89, candidatures:7, statut:'active', date:'Il y a 12 jours' },
+    { id:3, titre:'Stagiaire Informatique', categorie:'Informatique / Tech', lieu:'Libreville', contrat:'Stage', salaire:'50 000 FCFA', vues:43, candidatures:3, statut:'paused', date:'Il y a 1 mois' },
+  ];
+
+  const messages = [
+    { id:1, nom:'Jean-Baptiste Ondo', preview:'Bonjour, je suis intéressé par votre offre de comptable...', time:'Il y a 2h', unread:true },
+    { id:2, nom:'Marie Nguema', preview:'Merci pour votre retour. Je serai disponible vendredi...', time:'Hier', unread:true },
+    { id:3, nom:'Pierre Mba', preview:'Suite à notre échange, voici mon CV mis à jour.', time:'Il y a 3 jours', unread:false },
+  ];
+
+  // ─── NAVIGATION ──────────────────────────────────────
+  function go(page, el) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('page-' + page).classList.add('active');
+    if (el) el.classList.add('active');
+    const titles = { accueil:'Tableau de bord', candidats:'Chercher des candidats', offres:'Mes offres', publier:'Publier une offre', messages:'Messages', candidatures:'Candidatures reçues', entreprise:'Mon entreprise', abonnement:'Abonnement' };
+    document.getElementById('tb-title').textContent = titles[page] || page;
+    if (page === 'candidats') renderAllCandidats();
+    if (page === 'offres') renderOffres();
+    if (page === 'candidatures') renderCandidatures();
+    if (page === 'messages') renderMessages();
+  }
+
+  // ─── RENDER CANDIDATS ────────────────────────────────
+  function candidatCard(c) {
+    const matchClass = c.match >= 85 ? 'mh' : c.match >= 70 ? 'mm' : 'ml';
+    const init = c.nom.split(' ').map(n=>n[0]).join('').slice(0,2);
+    return `<div class="candidat-card" onclick="openCvModal(${c.id})">
+      <div class="cc-top">
+        <div class="cc-av">${init}</div>
+        <div class="cc-info">
+          <div class="cc-name">${c.nom} ${c.verifie ? '<span style="color:var(--green);font-size:0.7rem;">✅</span>' : ''}</div>
+          <div class="cc-poste">${c.poste}</div>
+          <div class="cc-meta">
+            <span>📍 ${c.quartier}</span>
+            <span>🎓 ${c.diplome}</span>
+            <span>💼 ${c.exp}</span>
+          </div>
+        </div>
+        <div class="cc-match ${matchClass}">${c.match}% match</div>
+      </div>
+      <div class="cc-tags">
+        ${c.skills.slice(0,3).map(s=>`<span class="tag">${s}</span>`).join('')}
+        ${c.verifie ? '<span class="tag v">✅ Vérifié</span>' : ''}
+        ${c.premium ? '<span class="tag" style="border-color:rgba(201,168,76,0.3);color:var(--gold);background:rgba(201,168,76,0.08);">⭐ Premium</span>' : ''}
+      </div>
+      <div class="cc-bot">
+        <button class="btn-cv" onclick="event.stopPropagation();openCvModal(${c.id})">📄 Voir CV</button>
+        <button class="btn-wa" onclick="event.stopPropagation();contactWADirect('${c.tel}','${c.nom}')">💬 WhatsApp</button>
+      </div>
+    </div>`;
+  }
+
+  function renderDashCandidats() {
+    document.getElementById('dash-candidats').innerHTML = candidats.slice(0,4).map(candidatCard).join('');
+  }
+
+  function renderAllCandidats() {
+    document.getElementById('all-candidats').innerHTML = candidats.map(candidatCard).join('');
+  }
+
+  function searchCandidats() {
+    const q = document.getElementById('search-q').value.toLowerCase();
+    const filtered = q ? candidats.filter(c => c.nom.toLowerCase().includes(q) || c.poste.toLowerCase().includes(q) || c.skills.some(s=>s.toLowerCase().includes(q))) : candidats;
+    document.getElementById('all-candidats').innerHTML = filtered.length ? filtered.map(candidatCard).join('') : '<div style="color:var(--text2);text-align:center;padding:40px;">Aucun candidat trouvé.</div>';
+    toast(`🔍 ${filtered.length} candidat(s) trouvé(s)`);
+  }
+
+  function toggleChip(el, filter) {
+    el.classList.toggle('active');
+  }
+
+  // ─── OFFRES ──────────────────────────────────────────
+  function renderOffres() {
+    document.getElementById('offres-list').innerHTML = offres.map(o => `
+      <div class="offre-pub">
+        <div class="op-status ${o.statut === 'active' ? 'op-active' : 'op-paused'}"></div>
+        <div class="op-info">
+          <div class="op-title">${o.titre}</div>
+          <div class="op-meta">
+            <span>📁 ${o.categorie}</span>
+            <span>📍 ${o.lieu}</span>
+            <span>📄 ${o.contrat}</span>
+            <span>💰 ${o.salaire}</span>
+            <span>🕐 ${o.date}</span>
+          </div>
+          <div class="op-stats">
+            <div class="op-stat">👁️ <strong>${o.vues}</strong> vues</div>
+            <div class="op-stat">📥 <strong>${o.candidatures}</strong> candidatures</div>
+            <div class="op-stat" style="color:${o.statut==='active'?'var(--green)':'var(--text3)'}">● ${o.statut === 'active' ? 'Active' : 'En pause'}</div>
+          </div>
+        </div>
+        <div class="op-btns">
+          <button class="btn-sm" onclick="toast('✏️ Modification en cours...')">✏️ Modifier</button>
+          <button class="btn-sm" onclick="toast('${o.statut==='active'?'⏸️ Offre mise en pause':'▶️ Offre réactivée'}')">
+            ${o.statut === 'active' ? '⏸️ Pause' : '▶️ Activer'}
+          </button>
+          <button class="btn-sm danger" onclick="toast('🗑️ Offre supprimée')">🗑️ Supprimer</button>
+        </div>
+      </div>`).join('');
+  }
+
+  function renderDashOffres() {
+    document.getElementById('dash-offres').innerHTML = offres.filter(o=>o.statut==='active').slice(0,2).map(o => `
+      <div class="offre-pub" style="margin-bottom:10px;">
+        <div class="op-status op-active"></div>
+        <div class="op-info">
+          <div class="op-title">${o.titre}</div>
+          <div class="op-meta"><span>📍 ${o.lieu}</span><span>📄 ${o.contrat}</span></div>
+          <div class="op-stats">
+            <div class="op-stat">👁️ <strong>${o.vues}</strong> vues</div>
+            <div class="op-stat">📥 <strong>${o.candidatures}</strong> candidatures</div>
+          </div>
+        </div>
+        <div class="op-btns">
+          <button class="btn-sm" onclick="go('candidatures',null)">Voir candidatures</button>
+        </div>
+      </div>`).join('');
+  }
+
+  // ─── CANDIDATURES ────────────────────────────────────
+  function renderCandidatures() {
+    const items = candidats.slice(0,5).map((c,i) => {
+      const statuts = ['en_attente','en_attente','accepte','en_attente','refuse'];
+      const s = statuts[i];
+      const sColor = s==='accepte'?'var(--green)':s==='refuse'?'var(--red)':'var(--gold)';
+      const sLabel = s==='accepte'?'✅ Acceptée':s==='refuse'?'❌ Refusée':'⏳ En attente';
+      const init = c.nom.split(' ').map(n=>n[0]).join('').slice(0,2);
+      return `<div class="msg-item ${i<2?'unread':''}">
+        <div class="msg-av">${init}</div>
+        <div class="msg-content">
+          <div class="msg-name">${c.nom} — <span style="font-weight:400;color:var(--text2);">${offres[i%3].titre}</span></div>
+          <div class="msg-preview">${c.poste} · ${c.quartier} · ${c.exp} d'expérience</div>
+          <div class="msg-time" style="color:${sColor}">${sLabel}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;">
+          <button class="btn-sm" onclick="openCvModal(${c.id})">📄 CV</button>
+          <button class="btn-wa" style="padding:6px 10px;font-size:0.72rem;border-radius:7px;" onclick="contactWADirect('${c.tel}','${c.nom}')">💬</button>
+        </div>
+        ${i<2?'<div class="msg-dot"></div>':''}
+      </div>`;
+    }).join('');
+    document.getElementById('candidatures-list').innerHTML = items;
+  }
+
+  // ─── MESSAGES ────────────────────────────────────────
+  function renderMessages() {
+    document.getElementById('msg-list').innerHTML = messages.map(m => `
+      <div class="msg-item ${m.unread?'unread':''}">
+        <div class="msg-av">${m.nom.split(' ').map(n=>n[0]).join('').slice(0,2)}</div>
+        <div class="msg-content">
+          <div class="msg-name">${m.nom}</div>
+          <div class="msg-preview">${m.preview}</div>
+          <div class="msg-time">${m.time}</div>
+        </div>
+        ${m.unread?'<div class="msg-dot"></div>':''}
+      </div>`).join('');
+  }
+
+  // ─── MODAL CV ────────────────────────────────────────
+  function openCvModal(id) {
+    const c = candidats.find(x=>x.id===id);
+    if (!c) return;
+    currentWaTel = c.tel;
+    const init = c.nom.split(' ').map(n=>n[0]).join('').slice(0,2);
+    document.getElementById('modal-av').textContent = init;
+    document.getElementById('modal-nom').textContent = c.nom;
+    document.getElementById('modal-poste').textContent = `${c.poste} · ${c.quartier}`;
+    document.getElementById('modal-details').innerHTML = `
+      <div class="cv-row"><span class="cv-row-lbl">Diplôme</span><span class="cv-row-val">${c.diplome}</span></div>
+      <div class="cv-row"><span class="cv-row-lbl">Expérience</span><span class="cv-row-val">${c.exp}</span></div>
+      <div class="cv-row"><span class="cv-row-lbl">Localisation</span><span class="cv-row-val">${c.quartier}</span></div>
+      <div class="cv-row"><span class="cv-row-lbl">Statut</span><span class="cv-row-val" style="color:var(--green)">🟢 Disponible</span></div>
+      <div class="cv-row"><span class="cv-row-lbl">Compatibilité</span><span class="cv-row-val" style="color:var(--gold2)">${c.match}% de correspondance</span></div>
+      ${c.verifie?'<div class="cv-row"><span class="cv-row-lbl">Profil</span><span class="cv-row-val" style="color:var(--green)">✅ Vérifié GabJob</span></div>':''}
+    `;
+    document.getElementById('modal-skills').innerHTML = c.skills.map(s=>`<span class="skill-pill">${s}</span>`).join('');
+    document.getElementById('modal-cv').classList.add('open');
+  }
+
+  function closeCvModal() { document.getElementById('modal-cv').classList.remove('open'); }
+  document.getElementById('modal-cv').addEventListener('click', e => { if(e.target.id==='modal-cv') closeCvModal(); });
+
+  function contactWA() { contactWADirect(currentWaTel, ''); }
+  function contactWADirect(tel, nom) {
+    const msg = encodeURIComponent(`Bonjour ${nom ? nom.split(' ')[0] : ''}, je vous contacte via GabJob concernant une opportunité d'emploi.`);
+    const clean = tel.replace(/\D/g,'');
+    window.open(`https://wa.me/${clean}?text=${msg}`, '_blank');
+  }
+
+  // ─── PUBLIER OFFRE ───────────────────────────────────
+  function publierOffre() {
+    const titre = document.getElementById('o-titre').value.trim();
+    const categorie = document.getElementById('o-categorie').value;
+    if (!titre || !categorie) return toast('⚠️ Titre et catégorie obligatoires');
+    toast('🚀 Offre publiée avec succès !');
+    setTimeout(() => go('offres', null), 1500);
+  }
+
+  // ─── ENTREPRISE ──────────────────────────────────────
+  function saveEntreprise() {
+    toast('✅ Informations entreprise sauvegardées');
+  }
+
+  // ─── PAIEMENT ────────────────────────────────────────
+  function selPay(el) {
+    document.querySelectorAll('.pay-m').forEach(m => {
+      m.style.borderColor = 'var(--border2)';
+      m.style.background = 'var(--surface2)';
+    });
+    el.style.borderColor = 'var(--gold)';
+    el.style.background = 'rgba(201,168,76,0.1)';
+    const isBank = el.querySelector('div:last-child').textContent.includes('bancaire');
+    document.getElementById('pay-tel-field').style.display = isBank ? 'none' : 'block';
+  }
+
+  function processPayAbonnement() {
+    toast('⏳ Traitement du paiement...');
+    setTimeout(() => toast('✅ Paiement confirmé ! Abonnement renouvelé.'), 2000);
+  }
+
+  // ─── TOAST ───────────────────────────────────────────
+  function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  // ─── INIT ────────────────────────────────────────────
+  renderDashCandidats();
+  renderDashOffres();
+
+  // Charger depuis localStorage si dispo
+  const user = JSON.parse(localStorage.getItem('gabjob_user') || '{}');
+  if (user.nom) {
+    document.getElementById('sb-name').textContent = user.nom;
+    document.getElementById('dash-name').textContent = user.nom;
+    document.getElementById('sb-av').textContent = user.nom[0];
+  }
+</script>
+</body>
+</html>

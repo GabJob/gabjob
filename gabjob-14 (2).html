@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GabJob — Emploi & Services au Gabon</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/gabjob.css">
+</head>
+<body>
+
+<!-- URGENCE BAR -->
+<div class="urgency-bar">
+  🔥 Plus de <span>500 candidats</span> déjà inscrits à Libreville — Rejoignez-les maintenant !
+</div>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="/"><div class="logo-icon">💼</div>Gab<span>Job</span></a>
+  <div class="nav-c">
+    <button class="nav-link" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">Services</button>
+    <button class="nav-link" onclick="document.getElementById('comment').scrollIntoView({behavior:'smooth'})">Comment ça marche</button>
+    <button class="nav-link" onclick="window.location='/depannage'">🔧 Dépannage</button>
+    <button class="nav-link" onclick="window.location='/dashboard-recruteur'">🏢 Recruteurs</button>
+    <button class="btn-nav" onclick="openModal('candidat')">S'inscrire gratuitement →</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-badge"><span class="live-dot"></span>Plateforme #1 de l'emploi au Gabon</div>
+    <h1>Trouvez votre<br><em>opportunité</em><br>au Gabon.</h1>
+    <p class="hero-sub">Emploi, recrutement, dépannage — tout ce dont vous avez besoin à Libreville en un seul endroit. Simple, rapide, 100% gabonais.</p>
+    <div class="hero-btns">
+      <button class="btn-hero-main" onclick="openModal('candidat')">🚀 Commencer gratuitement</button>
+      <button class="btn-hero-sec" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">Découvrir →</button>
+    </div>
+    <div class="hero-proof">
+      <div class="proof-avatars">
+        <div class="proof-av">J</div><div class="proof-av">M</div>
+        <div class="proof-av">A</div><div class="proof-av">F</div>
+        <div class="proof-av">+</div>
+      </div>
+      <div class="proof-text"><strong>500+ Gabonais</strong> ont déjà rejoint GabJob<br>ce mois-ci</div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=900&q=80" alt="">
+  </div>
+  <div class="floating-card fc1">
+    <div class="fc-icon">💼</div>
+    <div class="fc-title">Nouvelle offre</div>
+    <div class="fc-sub">Total Gabon · Il y a 2h</div>
+    <div class="fc-val">Comptable Senior</div>
+  </div>
+  <div class="notif-stream" id="notif-stream"></div>
+</section>
+
+<!-- STATS BAND -->
+<div class="stats-band">
+  <div class="stats-band-inner">
+    <div class="sband-item"><div class="sband-icon">👤</div><div><div class="sband-num">500+</div><div class="sband-lbl">Candidats inscrits</div></div></div>
+    <div class="sband-divider"></div>
+    <div class="sband-item"><div class="sband-icon">🏢</div><div><div class="sband-num">50+</div><div class="sband-lbl">Entreprises recruteuses</div></div></div>
+    <div class="sband-divider"></div>
+    <div class="sband-item"><div class="sband-icon">🔧</div><div><div class="sband-num">24</div><div class="sband-lbl">Techniciens vérifiés</div></div></div>
+    <div class="sband-divider"></div>
+    <div class="sband-item"><div class="sband-icon">⭐</div><div><div class="sband-num">4.8/5</div><div class="sband-lbl">Note moyenne</div></div></div>
+    <div class="sband-divider"></div>
+    <div class="sband-item"><div class="sband-icon">🇬🇦</div><div><div class="sband-num">100%</div><div class="sband-lbl">Made in Gabon</div></div></div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="section section-alt" id="services">
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="s-chip">Nos offres</div>
+      <h2 class="s-h">Tout ce dont vous avez besoin<br>en un seul endroit</h2>
+      <p class="s-p">Que vous cherchiez un emploi, que vous recrutiez ou que vous ayez besoin d'un technicien — GabJob a la solution.</p>
+    </div>
+    <div class="services-grid">
+
+      <!-- CANDIDAT GRATUIT -->
+      <div class="srv-card" onclick="openModal('candidat')">
+        <div class="srv-img">
+          <img src="/static/dae5be1c-4310-4672-97b0-30926dfb3f1a.jpg" alt="Emploi Gabon">
+          <div class="srv-img-badge">👤 Gratuit</div>
+        </div>
+        <div class="srv-body">
+          <div class="srv-icon">💼</div>
+          <div class="srv-title">Candidat Gratuit</div>
+          <div class="srv-desc">Créez votre profil, accédez aux offres d'emploi et générez votre CV professionnel.</div>
+          <ul class="srv-feats">
+            <li><span class="ck">✓</span>Profil visible par les recruteurs</li>
+            <li><span class="ck">✓</span>Accès aux offres d'emploi</li>
+            <li><span class="ck">✓</span>Générateur CV pro — 10 000 FCFA</li>
+            <li><span class="ck">✓</span>Contact WhatsApp direct</li>
+          </ul>
+          <div class="srv-price">
+            <span class="srv-price-lbl">Inscription candidat</span>
+            <span class="srv-price-val free">GRATUIT</span>
+          </div>
+          <button class="btn-srv bg-orange">Commencer gratuitement →</button>
+        </div>
+      </div>
+
+      <!-- CANDIDAT PREMIUM -->
+      <div class="srv-card" style="border:2px solid var(--gold);position:relative;" onclick="openModal('candidat')">
+        <div style="position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--gold),#f59e0b);color:#000;font-family:'Syne',sans-serif;font-size:0.72rem;font-weight:800;padding:4px 16px;border-radius:0 0 10px 10px;white-space:nowrap;z-index:5;">⭐ RECOMMANDÉ</div>
+        <div class="srv-img">
+          <img src="/static/df1e3655-9a5c-44f9-aa5d-1524d477fe91.jpg" alt="Emploi Gabon Premium">
+          <div class="srv-img-badge" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#000;">⭐ Premium</div>
+        </div>
+        <div class="srv-body">
+          <div class="srv-icon">🌟</div>
+          <div class="srv-title">Candidat Premium</div>
+          <div class="srv-desc">Soyez mis en avant auprès des recruteurs, recevez des alertes et décrochez votre emploi plus vite.</div>
+          <ul class="srv-feats">
+            <li><span class="ck" style="background:rgba(245,158,11,0.15);color:#d97706;">✓</span>Profil <strong>mis en avant</strong> en priorité</li>
+            <li><span class="ck" style="background:rgba(245,158,11,0.15);color:#d97706;">✓</span>Alertes offres en temps réel</li>
+            <li><span class="ck" style="background:rgba(245,158,11,0.15);color:#d97706;">✓</span>Générateur CV pro — 10 000 FCFA</li>
+            <li><span class="ck" style="background:rgba(245,158,11,0.15);color:#d97706;">✓</span>Badge candidat vérifié ⭐</li>
+          </ul>
+          <div class="srv-price" style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);">
+            <span class="srv-price-lbl">Abonnement premium</span>
+            <span class="srv-price-val" style="color:#d97706;">5 000 FCFA/mois</span>
+          </div>
+          <button class="btn-srv" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#000;">Passer Premium →</button>
+        </div>
+      </div>
+
+      <!-- RECRUTEUR -->
+      <div class="srv-card" onclick="openModal('recruteur')">
+        <div class="srv-img">
+          <img src="/static/e9ca6770-679c-41ae-bf5f-3783b4b846e7.jpg" alt="Recrutement Gabon">
+          <div class="srv-img-badge">🏢 Recruteurs</div>
+        </div>
+        <div class="srv-body">
+          <div class="srv-icon">🏢</div>
+          <div class="srv-title">Je recrute des talents</div>
+          <div class="srv-desc">Publiez vos offres et accédez à des candidats qualifiés et vérifiés à Libreville. Filtrez, contactez, recrutez facilement.</div>
+          <ul class="srv-feats">
+            <li><span class="ck">✓</span>Base de profils vérifiés et qualifiés</li>
+            <li><span class="ck">✓</span>Publication d'offres illimitée</li>
+            <li><span class="ck">✓</span>Filtres avancés (compétence, zone)</li>
+            <li><span class="ck">✓</span>Contact WhatsApp direct</li>
+          </ul>
+          <div class="srv-price">
+            <span class="srv-price-lbl">Abonnement recruteur</span>
+            <span class="srv-price-val">120 000 FCFA/an</span>
+          </div>
+          <button class="btn-srv bg-blue">Je m'inscris comme recruteur →</button>
+        </div>
+      </div>
+
+      <!-- TECHNICIEN -->
+      <div class="srv-card" onclick="openModal('technicien')">
+        <div class="srv-img">
+          <img src="/static/6c07ec16-0b07-4ac9-a4f3-23df79940ffa.jpg" alt="Technicien Gabon">
+          <div class="srv-img-badge">🔧 Techniciens</div>
+        </div>
+        <div class="srv-body">
+          <div class="srv-icon">🔧</div>
+          <div class="srv-title">Je suis technicien</div>
+          <div class="srv-desc">Plombier, électricien, mécanicien ? Inscrivez-vous et recevez des clients chaque jour directement sur WhatsApp. Gardez 100% de vos revenus.</div>
+          <ul class="srv-feats">
+            <li><span class="ck">✓</span>Profil visible 24h/24 par les clients</li>
+            <li><span class="ck">✓</span>Contact WhatsApp direct — 0% commission</li>
+            <li><span class="ck">✓</span>Badge technicien vérifié</li>
+            <li><span class="ck">✓</span>Rentabilisé dès la 1ère intervention</li>
+          </ul>
+          <div class="srv-price">
+            <span class="srv-price-lbl">Abonnement technicien</span>
+            <span class="srv-price-val">10 000 FCFA/mois</span>
+          </div>
+          <button class="btn-srv bg-green">Je m'inscris comme technicien →</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- POURQUOI GABJOB -->
+<section class="section">
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="s-chip">Pourquoi GabJob ?</div>
+      <h2 class="s-h">La plateforme faite<br>pour le Gabon</h2>
+      <p class="s-p">GabJob est conçu spécifiquement pour le marché gabonais avec des fonctionnalités adaptées à nos réalités.</p>
+    </div>
+    <div class="why-grid">
+      <div class="why-card"><div class="why-icon wi-orange">📱</div><div class="why-title">100% Mobile</div><div class="why-desc">Accédez à GabJob depuis votre téléphone. Interface optimisée pour mobile, contact via WhatsApp.</div></div>
+      <div class="why-card"><div class="why-icon wi-green">✅</div><div class="why-title">Profils vérifiés</div><div class="why-desc">Tous les candidats et techniciens sont vérifiés via leur numéro de téléphone Gabon.</div></div>
+      <div class="why-card"><div class="why-icon wi-blue">⚡</div><div class="why-title">Contact instantané</div><div class="why-desc">Contactez directement via WhatsApp. Pas d'intermédiaire, pas de délai, juste du résultat.</div></div>
+      <div class="why-card"><div class="why-icon wi-gold">💰</div><div class="why-title">0% Commission</div><div class="why-desc">Les techniciens gardent 100% de leurs revenus. Pas de commission sur les missions.</div></div>
+      <div class="why-card"><div class="why-icon wi-purple">🇬🇦</div><div class="why-title">Made in Gabon</div><div class="why-desc">Conçu par des Gabonais pour les Gabonais. Nous comprenons les réalités du marché local.</div></div>
+      <div class="why-card"><div class="why-icon wi-red">🔒</div><div class="why-title">Sécurisé</div><div class="why-desc">Vos données sont protégées. Inscription sécurisée par code OTP sur votre téléphone.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- COMMENT CA MARCHE -->
+<section class="section section-alt" id="comment">
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="s-chip">Simple & Rapide</div>
+      <h2 class="s-h">Commencez en 4 étapes</h2>
+      <p class="s-p">En moins de 5 minutes, votre profil est créé et vous pouvez commencer.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card"><div class="step-num">1</div><div class="step-icon">📝</div><div class="step-title">Créez votre compte</div><div class="step-desc">Inscrivez-vous gratuitement en 2 minutes avec votre numéro de téléphone Gabon.</div></div>
+      <div class="step-card"><div class="step-num">2</div><div class="step-icon">👤</div><div class="step-title">Complétez votre profil</div><div class="step-desc">Ajoutez vos compétences, expériences et générez votre CV professionnel en un clic.</div></div>
+      <div class="step-card"><div class="step-num">3</div><div class="step-icon">🔍</div><div class="step-title">Explorez les opportunités</div><div class="step-desc">Parcourez les offres d'emploi ou trouvez un technicien disponible dans votre quartier.</div></div>
+      <div class="step-card"><div class="step-num">4</div><div class="step-icon">💬</div><div class="step-title">Contactez directement</div><div class="step-desc">Contactez via WhatsApp. Pas d'intermédiaire, résultats immédiats !</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- REVENUS TECHNICIENS -->
+<section class="section">
+  <div class="section-inner">
+    <div class="revenus-grid">
+      <div class="rev-cards">
+        <div class="s-chip">Pour les techniciens</div>
+        <h2 class="s-h">Gagnez plus<br>avec GabJob</h2>
+        <p style="color:var(--text2);font-size:0.9rem;line-height:1.7;margin-bottom:24px;">Des centaines de clients cherchent des techniciens comme vous chaque semaine à Libreville. Rejoignez GabJob et commencez à recevoir des appels dès aujourd'hui.</p>
+        <div class="rev-card"><div class="rev-icon wi-orange">🔧</div><div class="rev-info"><div class="rev-lbl">Par intervention</div><div class="rev-val">15 000 — 30 000 FCFA</div></div></div>
+        <div class="rev-card"><div class="rev-icon wi-green">📅</div><div class="rev-info"><div class="rev-lbl">Par semaine</div><div class="rev-val">5 — 10 clients</div></div></div>
+        <div class="rev-card" style="border-color:rgba(22,163,74,0.25);background:rgba(22,163,74,0.02)"><div class="rev-icon wi-green">💰</div><div class="rev-info"><div class="rev-lbl">Revenu mensuel estimé</div><div class="rev-val big">200 000 — 400 000 FCFA</div></div></div>
+      </div>
+      <div class="rev-right">
+        <h3>📊 Simulation de revenus</h3>
+        <p>Avec 5 interventions par semaine à 20 000 FCFA en moyenne :</p>
+        <div class="calcul">
+          <div class="calc-row"><span class="calc-lbl">5 interventions × 20 000 FCFA</span><span class="calc-val">100 000 FCFA/sem</span></div>
+          <div class="calc-row"><span class="calc-lbl">× 4 semaines</span><span class="calc-val">400 000 FCFA</span></div>
+          <div class="calc-row"><span class="calc-lbl">Abonnement GabJob</span><span class="calc-val">— 10 000 FCFA</span></div>
+          <div class="calc-row"><span class="calc-lbl">🏆 Revenu net mensuel</span><span class="calc-val">390 000 FCFA</span></div>
+        </div>
+        <p style="font-size:0.8rem;opacity:0.85;margin-bottom:20px;">L'abonnement est rentabilisé dès votre <strong>première intervention</strong>.</p>
+        <button class="btn-rev" onclick="openModal('technicien')">Je m'inscris comme technicien →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEMOIGNAGES -->
+<section class="section section-alt">
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="s-chip">Ils nous font confiance</div>
+      <h2 class="s-h">Ce que disent nos utilisateurs</h2>
+      <p class="s-p">Plus de 500 Gabonais utilisent GabJob chaque mois. Voici leurs témoignages.</p>
+    </div>
+    <div class="temos-grid">
+      <div class="temo-card">
+        <div class="temo-stars">★★★★★</div>
+        <div class="temo-text">"J'ai trouvé mon emploi en 3 jours sur GabJob. Le contact direct avec le recruteur via WhatsApp est très pratique. Je recommande à tous !"</div>
+        <div class="temo-author">
+          <div class="temo-av" style="background:linear-gradient(135deg,#f97316,#ea580c)">J</div>
+          <div><div class="temo-name">Jean-Baptiste Ondo</div><div class="temo-role">Comptable · Libreville Centre</div></div>
+          <div class="temo-badge">Candidat</div>
+        </div>
+      </div>
+      <div class="temo-card">
+        <div class="temo-stars">★★★★★</div>
+        <div class="temo-text">"En tant que DRH, GabJob nous a permis de trouver des candidats qualifiés rapidement. La plateforme est simple et les profils sont sérieux."</div>
+        <div class="temo-author">
+          <div class="temo-av" style="background:linear-gradient(135deg,#2563eb,#1d4ed8)">M</div>
+          <div><div class="temo-name">Marie Nzamba</div><div class="temo-role">DRH · Total Gabon</div></div>
+          <div class="temo-badge">Recruteur</div>
+        </div>
+      </div>
+      <div class="temo-card">
+        <div class="temo-stars">★★★★★</div>
+        <div class="temo-text">"Depuis que je suis sur GabJob, j'ai en moyenne 8 clients par semaine. L'abonnement est rentabilisé en une seule intervention !"</div>
+        <div class="temo-author">
+          <div class="temo-av" style="background:linear-gradient(135deg,#16a34a,#15803d)">P</div>
+          <div><div class="temo-name">Pierre Moussavou</div><div class="temo-role">Plombier · Libreville</div></div>
+          <div class="temo-badge">Technicien</div>
+        </div>
+      </div>
+      <div class="temo-card">
+        <div class="temo-stars">★★★★★</div>
+        <div class="temo-text">"J'ai trouvé un électricien en 5 minutes un dimanche soir. Il est venu rapidement et a résolu mon problème. GabJob c'est vraiment utile !"</div>
+        <div class="temo-author">
+          <div class="temo-av" style="background:linear-gradient(135deg,#7c3aed,#6d28d9)">F</div>
+          <div><div class="temo-name">Fatou Obame</div><div class="temo-role">Cliente · Owendo</div></div>
+          <div class="temo-badge">Cliente</div>
+        </div>
+      </div>
+      <div class="temo-card">
+        <div class="temo-stars">★★★★★</div>
+        <div class="temo-text">"Le générateur de CV est excellent ! J'ai généré un CV professionnel en 10 minutes. Deux jours après, j'avais déjà 3 appels de recruteurs."</div>
+        <div class="temo-author">
+          <div class="temo-av" style="background:linear-gradient(135deg,#dc2626,#b91c1c)">A</div>
+          <div><div class="temo-name">Alain Biyogo</div><div class="temo-role">Ingénieur · Libreville</div></div>
+          <div class="temo-badge">Candidat</div>
+        </div>
+      </div>
+      <div class="temo-card">
+        <div class="temo-stars">★★★★★</div>
+        <div class="temo-text">"Nous avons recruté 5 employés via GabJob en un mois. Le rapport qualité/prix est imbattable comparé aux autres plateformes."</div>
+        <div class="temo-author">
+          <div class="temo-av" style="background:linear-gradient(135deg,#0891b2,#0e7490)">S</div>
+          <div><div class="temo-name">Serge Mba</div><div class="temo-role">PDG · Gabon Telecom</div></div>
+          <div class="temo-badge">Recruteur</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-section">
+  <div class="cta-bg"></div>
+  <div class="cta-overlay"></div>
+  <div class="cta-inner">
+    <div class="s-chip" style="background:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.3);color:#fff;">Rejoignez GabJob aujourd'hui</div>
+    <h2>Qui êtes-vous ?<br>On a la solution pour vous.</h2>
+    <p>Choisissez votre profil et commencez en 2 minutes. C'est gratuit pour les candidats.</p>
+    <div class="cta-grid">
+      <div class="cta-opt sel" id="cta-candidat" onclick="selCta('candidat')">
+        <div class="cta-opt-icon">👤</div>
+        <div class="cta-opt-title">Je cherche un emploi</div>
+        <div class="cta-opt-desc">Accès gratuit · CV inclus</div>
+      </div>
+      <div class="cta-opt" id="cta-recruteur" onclick="selCta('recruteur')">
+        <div class="cta-opt-icon">🏢</div>
+        <div class="cta-opt-title">Je recrute</div>
+        <div class="cta-opt-desc">120 000 FCFA/an</div>
+      </div>
+      <div class="cta-opt" id="cta-technicien" onclick="selCta('technicien')">
+        <div class="cta-opt-icon">🔧</div>
+        <div class="cta-opt-title">Je suis technicien</div>
+        <div class="cta-opt-desc">10 000 FCFA/mois</div>
+      </div>
+    </div>
+    <button class="btn-cta-main" id="btn-cta" onclick="openModalFromCta()">🚀 Commencer maintenant →</button>
+    <div class="cta-note">✅ Inscription en 2 minutes · 🔒 Sécurisé · 📱 100% Mobile</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-logo">Gab<span>Job</span></div>
+        <div class="footer-desc">La plateforme #1 de l'emploi et des services au Gabon. Connectons les talents, les entreprises et les techniciens de Libreville.</div>
+        <div class="footer-badge">🇬🇦 Made in Libreville, Gabon</div>
+      </div>
+      <div class="footer-col">
+        <h4>Candidats</h4>
+        <a onclick="openModal('candidat')">Créer un compte</a>
+        <a onclick="window.location='/dashboard'">Mon dashboard</a>
+        <a onclick="openModal('candidat')">Offres d'emploi</a>
+        <a onclick="openModal('candidat')">Générateur CV</a>
+      </div>
+      <div class="footer-col">
+        <h4>Recruteurs</h4>
+        <a onclick="window.location='/dashboard-recruteur'">Dashboard recruteur</a>
+        <a onclick="openModal('recruteur')">Publier une offre</a>
+        <a onclick="openModal('recruteur')">Chercher des profils</a>
+        <a onclick="openModal('recruteur')">Tarifs</a>
+      </div>
+      <div class="footer-col">
+        <h4>Dépannage</h4>
+        <a onclick="window.location='/depannage'">Trouver un technicien</a>
+        <a onclick="openModal('technicien')">S'inscrire technicien</a>
+        <a onclick="window.location='/depannage'">Plomberie</a>
+        <a onclick="window.location='/depannage'">Électricité</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2026 GabJob · Libreville, Gabon · Tous droits réservés</div>
+      <div style="font-size:0.78rem;color:#4b5563;">Made with ❤️ au Gabon</div>
+    </div>
+  </div>
+</footer>
+
+<!-- MODAL INSCRIPTION -->
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <button class="modal-x" onclick="closeModal()">✕</button>
+
+    <!-- STEP 1 -->
+    <div id="step1">
+      <div class="modal-icon" id="m-icon">👤</div>
+      <div class="modal-title" id="m-title">Créer mon compte</div>
+      <div class="modal-sub" id="m-sub">Gratuit · 2 minutes · Sans carte bancaire</div>
+      <div class="type-tabs">
+        <div class="type-tab active" id="tab-candidat" onclick="selType('candidat')">👤<br>Candidat</div>
+        <div class="type-tab" id="tab-recruteur" onclick="selType('recruteur')">🏢<br>Recruteur</div>
+        <div class="type-tab" id="tab-technicien" onclick="selType('technicien')">🔧<br>Technicien</div>
+      </div>
+      <div class="fg"><label>Nom complet *</label><input type="text" id="r-nom" placeholder="Jean Ondo"></div>
+      <div class="fg"><label>Téléphone *</label><input type="tel" id="r-tel" placeholder="074 00 00 00"></div>
+      <div class="fg"><label>Email</label><input type="email" id="r-email" placeholder="email@gmail.com"></div>
+      <div class="fg" id="fg-quartier"><label>Quartier</label><input type="text" id="r-quartier" placeholder="Libreville Centre"></div>
+      <div class="fg" id="fg-specialite" style="display:none"><label>Spécialité *</label>
+        <select id="r-spec"><option value="">Choisir</option><option value="plomberie">🔧 Plomberie</option><option value="electricite">⚡ Électricité</option><option value="climatisation">❄️ Climatisation</option><option value="mecanique">🚗 Mécanique</option><option value="informatique">💻 Informatique</option><option value="maconnerie">🧱 Maçonnerie</option><option value="peinture">🎨 Peinture</option><option value="autre">Autre</option></select>
+      </div>
+      <button class="btn-modal" onclick="inscrire()">Créer mon compte →</button>
+      <div class="msg" id="msg1"></div>
+      <div class="trust-row">
+        <div class="trust-item">🔒 Sécurisé</div>
+        <div class="trust-item">📱 Vérification SMS</div>
+        <div class="trust-item">✅ Gratuit</div>
+      </div>
+    </div>
+
+    <!-- STEP 2 OTP -->
+    <div id="step2" style="display:none">
+      <div class="modal-icon">📱</div>
+      <div class="modal-title">Vérification SMS</div>
+      <div class="modal-sub">Entrez le code reçu par SMS au <strong id="otp-tel"></strong></div>
+      <div class="otp-inputs">
+        <input class="otp-input" maxlength="1" id="o1" oninput="nextOtp(this,'o2')">
+        <input class="otp-input" maxlength="1" id="o2" oninput="nextOtp(this,'o3')">
+        <input class="otp-input" maxlength="1" id="o3" oninput="nextOtp(this,'o4')">
+        <input class="otp-input" maxlength="1" id="o4" oninput="nextOtp(this,'o5')">
+        <input class="otp-input" maxlength="1" id="o5" oninput="nextOtp(this,'o6')">
+        <input class="otp-input" maxlength="1" id="o6" oninput="verifyOtp()">
+      </div>
+      <button class="btn-modal" onclick="verifyOtp()">✅ Confirmer mon compte</button>
+      <div class="msg" id="msg2"></div>
+    </div>
+
+    <!-- STEP 3 SUCCESS -->
+    <div id="step3" style="display:none;text-align:center;padding:16px 0">
+      <div style="font-size:3.5rem;margin-bottom:16px">🎉</div>
+      <div class="modal-title">Bienvenue sur GabJob !</div>
+      <div class="modal-sub" style="margin-bottom:24px">Votre compte est créé avec succès. Accédez à votre espace.</div>
+      <button class="btn-modal" id="btn-dashboard">Accéder à mon espace →</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="/static/gabjob.js"></script>
+</body>
+</html>
