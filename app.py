@@ -183,6 +183,9 @@ def conditions():
 @app.route('/contact')
 def contact():
     return open('contact.html', encoding='utf-8').read()
+@app.route('/cv-generator')
+def cv_generator():
+    return open('cv-generator.html', encoding='utf-8').read()
 
 
 # ═══════════════════════════════════════════════════

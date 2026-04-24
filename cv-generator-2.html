@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GabJob — Générateur CV Pro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <link rel="stylesheet" href="/static/cv-generator.css">
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="/">Gab<span>Job</span> · Générateur CV</a>
+  <button class="btn-back" onclick="window.location='/dashboard'">← Retour</button>
+</nav>
+
+<div class="paywall" id="paywall">
+  <div class="paywall-card">
+    <div class="pw-icon">📄</div>
+    <div class="pw-title">Générateur CV Pro</div>
+    <p style="color:#6b7280;font-size:0.88rem;line-height:1.6;">Créez un CV professionnel niveau Canva qui vous démarquera auprès des recruteurs.</p>
+    <div class="pw-price">10 000 FCFA <span>· paiement unique</span></div>
+    <ul class="pw-feats">
+      <li>3 templates professionnels au choix</li>
+      <li>Export PDF haute qualité</li>
+      <li>Photo de profil optionnelle</li>
+      <li>Téléchargements illimités à vie</li>
+      <li>Modifications illimitées</li>
+    </ul>
+    <button class="btn-pay" onclick="payerEtDebloquer()">💳 Payer 10 000 FCFA et commencer →</button>
+    <div class="pw-note">🔒 Paiement sécurisé · Airtel Money / Moov Money</div>
+  </div>
+</div>
+
+<div class="editor">
+  <div class="form-side">
+    <div class="step-chip">Création CV</div>
+    <div class="form-title">🎨 Personnalisez votre CV</div>
+
+    <div class="section-title" style="margin-bottom:10px;">🖼️ Choisir un template</div>
+    <div class="templates">
+      <div class="tpl active" data-tpl="t1" onclick="selTemplate('t1',this)"><div class="tpl-preview t1">📄</div><div class="tpl-name">Moderne</div></div>
+      <div class="tpl" data-tpl="t2" onclick="selTemplate('t2',this)"><div class="tpl-preview t2">🎨</div><div class="tpl-name">Créatif</div></div>
+      <div class="tpl" data-tpl="t3" onclick="selTemplate('t3',this)"><div class="tpl-preview t3">💼</div><div class="tpl-name">Executif</div></div>
+    </div>
+
+    <div class="section-block open">
+      <div class="section-head" onclick="toggleSection(this)">
+        <div class="section-title">👤 Informations personnelles</div>
+        <div class="section-toggle">−</div>
+      </div>
+      <div class="section-body">
+        <label style="font-size:0.68rem;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;display:block;">Photo de profil</label>
+        <div class="photo-options">
+          <div class="photo-opt active" onclick="setPhotoMode('none',this)">Sans photo</div>
+          <div class="photo-opt" onclick="setPhotoMode('add',this)">Avec photo</div>
+        </div>
+        <div class="photo-shape-pick" id="photo-shape-pick">
+          <div class="photo-opt active" onclick="setPhotoShape('round',this)">🔵 Ronde</div>
+          <div class="photo-opt" onclick="setPhotoShape('square',this)">⬜ Carrée</div>
+        </div>
+        <div class="photo-upload-zone hidden" id="photo-zone" onclick="document.getElementById('cv-photo').click()">
+          <input type="file" id="cv-photo" accept="image/*" style="display:none" onchange="handlePhoto(event)">
+          <div class="photo-upload-icon">📸</div>
+          <div class="photo-upload-text">Cliquez pour ajouter votre photo<br><span style="font-size:0.65rem;">JPG/PNG · max 3MB</span></div>
+        </div>
+        <div class="photo-preview-wrap" id="photo-preview-wrap">
+          <img class="photo-preview" id="photo-preview" src="" alt="Photo">
+          <div><button class="btn-remove-photo" onclick="removePhoto()">✕ Supprimer la photo</button></div>
+        </div>
+
+        <div class="frow">
+          <div class="fg"><label>Prénom *</label><input type="text" id="cv-prenom" placeholder="Jean" oninput="render()"></div>
+          <div class="fg"><label>Nom *</label><input type="text" id="cv-nom" placeholder="Ondo" oninput="render()"></div>
+        </div>
+        <div class="fg"><label>Titre / Poste recherché *</label><input type="text" id="cv-titre" placeholder="Comptable Senior" oninput="render()"></div>
+        <div class="frow">
+          <div class="fg"><label>Téléphone</label><input type="tel" id="cv-tel" placeholder="+241 074 00 00 00" oninput="render()"></div>
+          <div class="fg"><label>Email</label><input type="email" id="cv-email" placeholder="email@gmail.com" oninput="render()"></div>
+        </div>
+        <div class="fg"><label>Ville</label><input type="text" id="cv-ville" placeholder="Libreville, Gabon" oninput="render()"></div>
+        <div class="fg"><label>LinkedIn (optionnel)</label><input type="text" id="cv-linkedin" placeholder="linkedin.com/in/votre-nom" oninput="render()"></div>
+      </div>
+    </div>
+
+    <div class="section-block open">
+      <div class="section-head" onclick="toggleSection(this)">
+        <div class="section-title">📝 Profil / Résumé</div>
+        <div class="section-toggle">−</div>
+      </div>
+      <div class="section-body">
+        <div class="fg"><label>Votre pitch professionnel</label><textarea id="cv-resume" rows="4" placeholder="Comptable expérimenté avec 5 ans d'expérience..." oninput="render()"></textarea></div>
+      </div>
+    </div>
+
+    <div class="section-block open">
+      <div class="section-head" onclick="toggleSection(this)">
+        <div class="section-title">💼 Expériences professionnelles</div>
+        <div class="section-toggle">−</div>
+      </div>
+      <div class="section-body">
+        <div class="item-list" id="exp-list"></div>
+        <button class="btn-add" onclick="addExp()">+ Ajouter une expérience</button>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-head" onclick="toggleSection(this)">
+        <div class="section-title">🎓 Formations</div>
+        <div class="section-toggle">+</div>
+      </div>
+      <div class="section-body">
+        <div class="item-list" id="form-list"></div>
+        <button class="btn-add" onclick="addForm()">+ Ajouter une formation</button>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-head" onclick="toggleSection(this)">
+        <div class="section-title">⭐ Compétences</div>
+        <div class="section-toggle">+</div>
+      </div>
+      <div class="section-body">
+        <div class="fg"><label>Vos compétences (séparées par des virgules)</label><textarea id="cv-skills" rows="3" placeholder="Comptabilité, Excel, SAP, Communication, Français, Anglais" oninput="render()"></textarea></div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-head" onclick="toggleSection(this)">
+        <div class="section-title">🌍 Langues</div>
+        <div class="section-toggle">+</div>
+      </div>
+      <div class="section-body">
+        <div class="fg"><label>Langues parlées (séparées par des virgules)</label><input type="text" id="cv-langues" placeholder="Français (natif), Anglais (courant)" oninput="render()"></div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-dl" onclick="downloadPDF()">📥 Télécharger en PDF</button>
+    </div>
+  </div>
+
+  <div class="preview-side">
+    <div class="cv-paper">
+      <div class="cv t1" id="cv-render"></div>
+    </div>
+  </div>
+</div>
+
+<script src="/static/cv-generator.js" defer></script>
+</body>
+</html>
