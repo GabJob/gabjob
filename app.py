@@ -186,6 +186,9 @@ def contact():
 @app.route('/cv-generator')
 def cv_generator():
     return open('cv-generator.html', encoding='utf-8').read()
+@app.route('/parrainage')
+def parrainage():
+    return open('parrainage.html', encoding='utf-8').read()
 
 
 # ═══════════════════════════════════════════════════
