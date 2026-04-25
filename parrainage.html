@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GabJob — Programme Parrainage Premium</title>
+  <meta name="description" content="Parrainage Premium GabJob : invitez 10 amis Premium et gagnez 1 mois gratuit. Réservé aux abonnés payants.">
+  <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/parrainage.css">
+</head>
+<body>
+
+<!-- LOGIN OVERLAY -->
+<div class="auth-overlay" id="auth-overlay">
+  <div class="auth-card">
+    <div class="auth-icon">🎁</div>
+    <div class="auth-title">Programme Parrainage</div>
+    <div class="auth-sub">Connectez-vous pour accéder à votre espace parrainage</div>
+    <div class="fg"><label>Téléphone</label><input type="tel" id="login-tel" placeholder="074 00 00 00"></div>
+    <button class="btn-primary" onclick="sendLoginOtp()">Recevoir mon code SMS →</button>
+    <div id="login-otp-section" style="display:none;margin-top:16px;">
+      <div class="fg"><label>Code reçu par SMS</label><input type="text" id="login-otp" placeholder="123456" maxlength="6"></div>
+      <button class="btn-primary" onclick="verifyLoginOtp()">Vérifier</button>
+    </div>
+    <div class="msg" id="login-msg"></div>
+    <div class="auth-foot">Pas encore inscrit ? <a href="/" style="color:#f97316;font-weight:600;">Créer un compte</a></div>
+  </div>
+</div>
+
+<!-- PAYWALL OVERLAY (réservé aux abonnés payants) -->
+<div class="auth-overlay" id="paywall-overlay" style="display:none;">
+  <div class="auth-card paywall-card">
+    <div class="auth-icon">🔒</div>
+    <div class="badge-premium">RÉSERVÉ AUX ABONNÉS PAYANTS</div>
+    <div class="auth-title">Programme Parrainage Premium</div>
+    <div class="auth-sub">Le programme parrainage est exclusivement réservé aux membres ayant un abonnement payant actif.</div>
+    
+    <div class="paywall-info">
+      <div class="paywall-plan">
+        <div class="paywall-plan-name" id="paywall-plan-name">Candidat Premium</div>
+        <div class="paywall-plan-price" id="paywall-plan-price">5 000 FCFA / mois</div>
+      </div>
+    </div>
+    
+    <ul class="pw-feats" style="text-align:left;margin:20px 0;">
+      <li>🎁 Invitez 10 amis Premium = <b>1 mois gratuit</b></li>
+      <li>♻️ Recommencez à l'infini, pas de limite</li>
+      <li>📊 Suivi en temps réel de vos filleuls</li>
+      <li>⚡ Crédit automatique à chaque palier</li>
+    </ul>
+    
+    <button class="btn-primary" onclick="activerAbonnement()">💳 Activer mon abonnement →</button>
+    <div class="auth-foot">Déjà abonné ? <a href="#" onclick="window.location.reload();return false;" style="color:#f97316;font-weight:600;">Recharger la page</a></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="main-nav" style="display:none;">
+  <a class="logo" href="/">Gab<span>Job</span></a>
+  <div class="nav-right">
+    <a href="/dashboard" class="btn-back">← Mon dashboard</a>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main id="main" style="display:none;">
+  <div class="container">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="badge">🎁 Programme Parrainage Premium</div>
+      <h1>Invitez <span class="hl">10 amis Premium</span><br>et gagnez <span class="hl">1 mois gratuit</span> !</h1>
+      <p class="hero-sub">Partagez votre lien unique. Quand 10 de vos filleuls deviennent abonnés Premium, vous obtenez automatiquement 1 mois Premium gratuit. Pas de limite : recommencez à l'infini.</p>
+    </div>
+
+    <!-- INFO IMPORTANT -->
+    <div class="info-box">
+      <div class="info-icon">ℹ️</div>
+      <div>
+        <strong>Important :</strong> Seuls les filleuls ayant <b>activé un abonnement payant</b> sont comptés pour gagner votre mois gratuit. Les inscriptions gratuites n'augmentent pas votre compteur.
+      </div>
+    </div>
+
+    <!-- PROGRESS CARD -->
+    <div class="progress-card">
+      <div class="progress-header">
+        <div>
+          <div class="progress-label">Votre progression</div>
+          <div class="progress-count"><span id="filleuls-count">0</span> / 10 filleuls Premium</div>
+        </div>
+        <div class="progress-reward">
+          <div class="reward-icon">⭐</div>
+          <div>
+            <div class="reward-label">Récompense</div>
+            <div class="reward-value">1 mois Premium</div>
+          </div>
+        </div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+      <div class="progress-text" id="progress-text">Plus que 10 filleuls Premium pour gagner 1 mois gratuit !</div>
+      
+      <!-- STATS DETAILED -->
+      <div class="stats-row">
+        <div class="stat-mini">
+          <div class="stat-mini-val" id="filleuls-total">0</div>
+          <div class="stat-mini-lbl">Filleuls inscrits</div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-mini-val orange" id="filleuls-payants">0</div>
+          <div class="stat-mini-lbl">Filleuls Premium</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LINK CARD -->
+    <div class="card">
+      <h2>🔗 Votre lien de parrainage</h2>
+      <p class="card-desc">Partagez ce lien avec vos amis. Quand ils deviennent Premium, votre compteur monte.</p>
+      <div class="link-box">
+        <input type="text" id="referral-link" readonly value="https://gabjob.org/?ref=...">
+        <button class="btn-copy" onclick="copyLink()">📋 Copier</button>
+      </div>
+      <div class="share-buttons">
+        <a class="btn-share btn-wa" id="share-wa" href="#" target="_blank">💬 WhatsApp</a>
+        <a class="btn-share btn-fb" id="share-fb" href="#" target="_blank">📘 Facebook</a>
+        <a class="btn-share btn-sms" id="share-sms" href="#" target="_blank">📱 SMS</a>
+        <a class="btn-share btn-tw" id="share-tw" href="#" target="_blank">🐦 X / Twitter</a>
+      </div>
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <div class="card">
+      <h2>💡 Comment ça marche ?</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h3>Partagez votre lien unique</h3>
+            <p>Envoyez-le à votre famille, amis, collègues. Plus vous partagez, plus vite vous gagnez.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h3>Vos amis s'inscrivent</h3>
+            <p>Ils créent leur compte sur GabJob via votre lien parrainage.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h3>Ils activent leur abonnement Premium ⭐</h3>
+            <p><b>C'est cette étape qui compte.</b> Lorsqu'un filleul devient abonné payant, votre compteur grimpe de +1.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h3>🎉 Au 10ème filleul Premium = récompense !</h3>
+            <p>Votre mois Premium gratuit est crédité automatiquement. Recommencez pour gagner encore !</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BENEFITS PREMIUM -->
+    <div class="card">
+      <h2>⭐ Que contient votre abonnement Premium ?</h2>
+      <ul class="benefits">
+        <li>🚀 Profil mis en avant en tête des résultats</li>
+        <li>👁️ Voir qui consulte votre profil</li>
+        <li>📊 Statistiques détaillées de votre profil</li>
+        <li>🎯 Recommandation prioritaire aux recruteurs</li>
+        <li>🔔 Alertes personnalisées en temps réel</li>
+        <li>💼 Badge "Candidat Premium" sur votre profil</li>
+      </ul>
+    </div>
+
+    <!-- FILLEULS LIST -->
+    <div class="card">
+      <h2>👥 Mes filleuls</h2>
+      <p class="card-desc">⭐ = Compte pour 1 point · 🔓 = Pas encore Premium</p>
+      <div id="filleuls-list">
+        <div class="empty-state">
+          <div class="empty-icon">👻</div>
+          <div class="empty-title">Aucun filleul pour l'instant</div>
+          <p>Partagez votre lien pour commencer à gagner !</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- HISTORY REWARDS -->
+    <div class="card" id="rewards-card" style="display:none;">
+      <h2>🏆 Mes récompenses</h2>
+      <div id="rewards-list"></div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="card">
+      <h2>❓ Questions fréquentes</h2>
+      <div class="faq-item">
+        <h3>Pourquoi seuls les filleuls Premium comptent ?</h3>
+        <p>Le programme parrainage récompense les apporteurs d'affaires. Il faut un véritable engagement (abonnement payant) pour que le système soit équitable et durable.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Combien de temps pour qu'un filleul soit "validé" ?</h3>
+        <p>Dès qu'il active son abonnement payant, votre compteur monte instantanément. Si il annule rapidement, le point est retiré.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Puis-je parrainer des recruteurs et techniciens ?</h3>
+        <p>Oui ! Tous les abonnements payants comptent : Candidat Premium (5K), Recruteur Pro (120K/an) et Technicien (10K/mois).</p>
+      </div>
+      <div class="faq-item">
+        <h3>Puis-je dépasser 10 filleuls ?</h3>
+        <p>Bien sûr ! Au-delà de 10, le compteur recommence à zéro et vous gagnez à nouveau 1 mois gratuit. Pas de limite, c'est cumulable à l'infini.</p>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script src="/static/parrainage.js" defer></script>
+</body>
+</html>
