@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tarifs et abonnements | GabJob</title>
+  <meta name="description" content="Découvrez tous les abonnements GabJob : Candidat Premium 5000 FCFA/mois, Recruteur Pro 120000 FCFA/an, Technicien 10000 FCFA/mois, Générateur CV 10000 FCFA.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Tarifs GabJob - Abonnements adaptés à tous">
+  <meta property="og:description" content="Choisissez votre formule GabJob et boostez votre carrière ou recrutement au Gabon.">
+  <meta property="og:image" content="https://gabjob.org/static/og-image.svg">
+  <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/whatsapp-float.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --orange: #f97316; --orange2: #ea580c; --orange3: #fff7ed;
+      --gold: #f59e0b; --green: #16a34a; --red: #dc2626;
+      --text: #111827; --text2: #6b7280; --text3: #9ca3af;
+      --bg: #f9fafb; --border: #e5e7eb;
+    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* NAV */
+    nav { position: sticky; top: 0; z-index: 100; padding: 14px 28px; background: rgba(255,255,255,0.97); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 800; text-decoration: none; color: var(--text); }
+    .logo span { color: var(--orange); }
+    .btn-back { background: none; border: 1px solid var(--border); padding: 8px 16px; border-radius: 8px; font-size: 0.82rem; color: var(--text2); text-decoration: none; }
+
+    /* HERO */
+    .hero { padding: 60px 24px 40px; text-align: center; max-width: 800px; margin: 0 auto; }
+    .badge { display: inline-block; background: var(--orange3); color: var(--orange2); padding: 6px 14px; border-radius: 100px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 18px; }
+    h1 { font-family: 'Syne', sans-serif; font-size: 2.6rem; font-weight: 800; letter-spacing: -1.5px; line-height: 1.15; margin-bottom: 16px; }
+    h1 span { background: linear-gradient(135deg, var(--orange), var(--orange2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero-sub { color: var(--text2); font-size: 1.05rem; line-height: 1.65; max-width: 580px; margin: 0 auto; }
+
+    /* CONTAINER */
+    .container { max-width: 1180px; margin: 0 auto; padding: 0 24px 60px; }
+
+    /* PRICING GRID */
+    .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; margin-bottom: 60px; }
+    .plan { background: #fff; border: 2px solid var(--border); border-radius: 18px; padding: 28px 24px; position: relative; transition: all 0.2s; display: flex; flex-direction: column; }
+    .plan:hover { border-color: var(--orange); transform: translateY(-4px); box-shadow: 0 16px 32px rgba(249,115,22,0.1); }
+    .plan.featured { border-color: var(--orange); box-shadow: 0 12px 32px rgba(249,115,22,0.15); }
+    .plan.featured::before { content: '⭐ POPULAIRE'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, var(--orange), var(--orange2)); color: #fff; padding: 4px 14px; border-radius: 100px; font-size: 0.68rem; font-weight: 800; letter-spacing: 1px; white-space: nowrap; }
+    .plan-icon { font-size: 2.4rem; margin-bottom: 10px; }
+    .plan-name { font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 800; margin-bottom: 6px; }
+    .plan-tagline { color: var(--text2); font-size: 0.85rem; line-height: 1.4; margin-bottom: 18px; min-height: 38px; }
+    .plan-price { font-family: 'Syne', sans-serif; font-size: 2.2rem; font-weight: 800; color: var(--orange); line-height: 1; margin-bottom: 4px; }
+    .plan-price-period { color: var(--text2); font-size: 0.82rem; font-weight: 500; margin-bottom: 22px; }
+    .plan-features { list-style: none; flex: 1; margin-bottom: 22px; }
+    .plan-features li { padding: 8px 0; font-size: 0.88rem; color: var(--text); border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: 8px; line-height: 1.5; }
+    .plan-features li:last-child { border-bottom: none; }
+    .plan-features li::before { content: '✅'; flex-shrink: 0; }
+    .plan-features li.disabled { color: var(--text3); }
+    .plan-features li.disabled::before { content: '❌'; }
+    .btn-plan { display: block; background: linear-gradient(135deg, var(--orange), var(--orange2)); color: #fff; border: none; padding: 14px; border-radius: 10px; font-size: 0.92rem; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; text-decoration: none; text-align: center; box-shadow: 0 4px 16px rgba(249,115,22,0.3); transition: all 0.15s; width: 100%; }
+    .btn-plan:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(249,115,22,0.4); }
+    .btn-plan-outline { background: #fff; color: var(--orange); border: 2px solid var(--orange); box-shadow: none; }
+    .btn-plan-outline:hover { background: var(--orange3); }
+
+    /* COMPARISON */
+    .comparison-section { background: #fff; border-radius: 18px; padding: 40px; margin-bottom: 40px; border: 1px solid var(--border); }
+    .comparison-section h2 { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; text-align: center; margin-bottom: 30px; }
+    .comp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
+    .comp-item { padding: 20px; background: var(--bg); border-radius: 12px; text-align: center; }
+    .comp-icon { font-size: 2rem; margin-bottom: 8px; }
+    .comp-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; margin-bottom: 6px; }
+    .comp-desc { color: var(--text2); font-size: 0.85rem; line-height: 1.55; }
+
+    /* FAQ */
+    .faq-section { background: #fff; border-radius: 18px; padding: 40px; margin-bottom: 40px; border: 1px solid var(--border); }
+    .faq-section h2 { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; margin-bottom: 24px; }
+    .faq-item { padding: 14px 0; border-bottom: 1px solid var(--border); }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-q { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; margin-bottom: 6px; }
+    .faq-a { color: var(--text2); font-size: 0.88rem; line-height: 1.6; }
+
+    /* CTA */
+    .cta-bottom { background: linear-gradient(135deg, var(--orange3), #fff); border: 2px dashed var(--orange); border-radius: 18px; padding: 40px; text-align: center; }
+    .cta-bottom h2 { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; margin-bottom: 10px; }
+    .cta-bottom p { color: var(--text2); margin-bottom: 22px; max-width: 480px; margin-left: auto; margin-right: auto; line-height: 1.6; }
+    .cta-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn-wa-cta { background: #25d366; color: #fff; border: none; padding: 13px 24px; border-radius: 10px; font-weight: 700; text-decoration: none; font-size: 0.92rem; }
+
+    /* MODAL PAIEMENT */
+    .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
+    .modal-bg.open { display: flex; }
+    .modal { background: #fff; border-radius: 20px; max-width: 540px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 32px 28px; position: relative; }
+    .modal-x { position: absolute; top: 14px; right: 14px; background: var(--bg); border: none; width: 36px; height: 36px; border-radius: 10px; cursor: pointer; font-size: 1.1rem; }
+    .modal-title { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800; margin-bottom: 6px; }
+    .modal-sub { color: var(--text2); font-size: 0.9rem; margin-bottom: 22px; }
+    .pay-info { background: linear-gradient(135deg, var(--orange3), #fff); border: 2px dashed var(--orange); border-radius: 14px; padding: 20px; margin-bottom: 22px; }
+    .pay-info-label { font-size: 0.72rem; color: var(--orange2); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 8px; }
+    .pay-info-amount { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: var(--orange); margin-bottom: 16px; }
+    .pay-numbers { background: #fff; border-radius: 10px; padding: 14px; margin-top: 12px; border: 1px solid #fed7aa; }
+    .pay-num-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 0.92rem; }
+    .pay-num-row strong { font-family: 'Syne', sans-serif; font-weight: 800; color: var(--text); font-size: 1rem; letter-spacing: 0.5px; }
+    .pay-step { display: flex; gap: 12px; margin-bottom: 16px; align-items: flex-start; }
+    .step-num { width: 28px; height: 28px; min-width: 28px; border-radius: 50%; background: var(--orange); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.85rem; flex-shrink: 0; }
+    .step-content { font-size: 0.88rem; line-height: 1.55; color: var(--text); padding-top: 4px; }
+    .step-content strong { color: var(--orange2); }
+    .fg { margin-bottom: 14px; }
+    .fg label { display: block; font-size: 0.72rem; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .fg input, .fg select, .fg textarea { width: 100%; background: var(--bg); border: 1.5px solid var(--border); border-radius: 9px; padding: 11px 14px; font-size: 0.9rem; font-family: 'DM Sans', sans-serif; outline: none; -webkit-appearance: none; transition: border-color 0.15s; }
+    .fg input:focus, .fg select:focus, .fg textarea:focus { border-color: var(--orange); }
+    .fg textarea { resize: none; }
+    .frow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .btn-submit { background: linear-gradient(135deg, var(--orange), var(--orange2)); color: #fff; border: none; padding: 14px; border-radius: 10px; font-size: 0.95rem; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; box-shadow: 0 4px 16px rgba(249,115,22,0.3); width: 100%; }
+    .btn-submit:hover { transform: translateY(-1px); }
+    .msg { font-size: 0.85rem; margin-top: 14px; padding: 12px 14px; border-radius: 10px; display: none; }
+    .msg.show { display: block; }
+    .msg.success { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+    .msg.error { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+    .upload-zone { border: 2px dashed var(--border); border-radius: 10px; padding: 16px; text-align: center; background: var(--bg); cursor: pointer; }
+    .upload-zone:hover { border-color: var(--orange); background: var(--orange3); }
+    .upload-name { font-size: 0.85rem; color: var(--orange2); font-weight: 700; margin-top: 8px; display: none; }
+    .upload-name.show { display: block; }
+
+    /* SUCCESS SCREEN */
+    .success-screen { display: none; text-align: center; padding: 20px; }
+    .success-screen.show { display: block; }
+    .success-icon { font-size: 4rem; margin-bottom: 16px; }
+    .success-title { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800; margin-bottom: 10px; color: var(--green); }
+    .success-text { color: var(--text2); line-height: 1.6; margin-bottom: 20px; font-size: 0.92rem; }
+
+    @media(max-width:640px) {
+      h1 { font-size: 1.9rem; }
+      .hero { padding: 40px 16px 30px; }
+      .container { padding: 0 16px 40px; }
+      .comparison-section, .faq-section, .cta-bottom { padding: 26px 20px; }
+      .modal { padding: 24px 20px; }
+      .modal-title { font-size: 1.2rem; }
+      .frow { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="/">Gab<span>Job</span></a>
+  <a href="/" class="btn-back">← Accueil</a>
+</nav>
+
+<div class="hero">
+  <div class="badge">💎 Tarifs simples et transparents</div>
+  <h1>Choisissez votre <span>formule GabJob</span></h1>
+  <p class="hero-sub">Que vous cherchiez un emploi, des talents ou des techniciens fiables, GabJob a la formule qu'il vous faut. Inscription gratuite, abonnement optionnel.</p>
+</div>
+
+<div class="container">
+
+  <!-- PRICING GRID -->
+  <div class="pricing-grid">
+
+    <!-- CANDIDAT GRATUIT -->
+    <div class="plan">
+      <div class="plan-icon">👤</div>
+      <div class="plan-name">Candidat Gratuit</div>
+      <div class="plan-tagline">Pour tous ceux qui cherchent un emploi</div>
+      <div class="plan-price">0 FCFA</div>
+      <div class="plan-price-period">Pour toujours</div>
+      <ul class="plan-features">
+        <li>Profil candidat complet</li>
+        <li>Visible des recruteurs</li>
+        <li class="disabled">Voir les offres d emploi</li>
+        <li class="disabled">Postuler aux offres</li>
+        <li class="disabled">Profil en avant</li>
+        <li class="disabled">Statistiques de profil</li>
+        <li class="disabled">Voir qui m'a vu</li>
+      </ul>
+      <a href="/" class="btn-plan btn-plan-outline">S'inscrire gratuitement</a>
+    </div>
+
+    <!-- CANDIDAT PREMIUM -->
+    <div class="plan featured">
+      <div class="plan-icon">⭐</div>
+      <div class="plan-name">Candidat Premium</div>
+      <div class="plan-tagline">Pour décrocher un job rapidement</div>
+      <div class="plan-price">5 000 FCFA</div>
+      <div class="plan-price-period">par mois</div>
+      <ul class="plan-features">
+        <li>Tout du Gratuit</li>
+        <li><strong>Acc&#232;s aux offres d emploi</strong></li>
+        <li><strong>Postuler aux offres</strong></li>
+        <li><strong>Profil mis en avant</strong></li>
+        <li>Recommandation prioritaire aux recruteurs</li>
+        <li>Voir qui consulte votre profil</li>
+        <li>Statistiques détaillées</li>
+        <li>Badge Premium ⭐</li>
+        <li>Programme parrainage actif</li>
+      </ul>
+      <button class="btn-plan" onclick="openPayModal('Candidat Premium', 5000, 'mensuel')">S'abonner Premium →</button>
+    </div>
+
+    <!-- RECRUTEUR PRO -->
+    <div class="plan">
+      <div class="plan-icon">🏢</div>
+      <div class="plan-name">Recruteur Pro</div>
+      <div class="plan-tagline">Pour les entreprises qui recrutent</div>
+      <div class="plan-price">120 000 FCFA</div>
+      <div class="plan-price-period">par an (10 000/mois)</div>
+      <ul class="plan-features">
+        <li>Accès illimité aux candidats</li>
+        <li>Publication d'offres illimitée</li>
+        <li>Filtres avancés par compétence</li>
+        <li>Contact WhatsApp direct</li>
+        <li>Statistiques de performance</li>
+        <li>Support prioritaire</li>
+        <li>Badge "Recruteur Vérifié" 🛡️</li>
+      </ul>
+      <button class="btn-plan" onclick="openPayModal('Recruteur Pro', 120000, 'annuel')">Activer Pro →</button>
+    </div>
+
+    <!-- TECHNICIEN -->
+    <div class="plan">
+      <div class="plan-icon">🔧</div>
+      <div class="plan-name">Technicien</div>
+      <div class="plan-tagline">Pour les pros du dépannage</div>
+      <div class="plan-price">10 000 FCFA</div>
+      <div class="plan-price-period">par mois</div>
+      <ul class="plan-features">
+        <li>Visibilité maximale</li>
+        <li>Demandes de devis illimitées</li>
+        <li>Profil mis en avant par catégorie</li>
+        <li>Badge "Technicien Vérifié" 🛡️</li>
+        <li>Notifications instantanées</li>
+        <li>Photos et vidéos illimitées</li>
+        <li>Avis clients</li>
+      </ul>
+      <button class="btn-plan" onclick="openPayModal('Technicien', 10000, 'mensuel')">S'abonner Technicien →</button>
+    </div>
+
+  </div>
+
+  <!-- BONUS CV GENERATOR -->
+  <div class="comparison-section" style="text-align:center; background:linear-gradient(135deg, #fff7ed, #fff); border:2px solid var(--orange);">
+    <div style="font-size:2.5rem;margin-bottom:8px;">📄</div>
+    <h2 style="margin-bottom:10px;">Générateur de CV Pro</h2>
+    <p style="color:var(--text2);margin-bottom:16px;max-width:520px;margin-left:auto;margin-right:auto;line-height:1.6;">Créez un CV professionnel niveau Canva avec 3 templates, photo de profil, export PDF haute qualité. <strong>Paiement unique, accès à vie.</strong></p>
+    <div style="font-family:'Syne',sans-serif;font-size:2.4rem;font-weight:800;color:var(--orange);margin-bottom:6px;">10 000 FCFA</div>
+    <div style="color:var(--text2);font-size:0.85rem;margin-bottom:24px;">Paiement unique · Modifications illimitées</div>
+    <button class="btn-plan" style="max-width:280px;margin:0 auto;display:block;" onclick="openPayModal('Générateur CV', 10000, 'unique')">Débloquer le CV Pro →</button>
+  </div>
+
+  <!-- COMPARISON / WHY -->
+  <div class="comparison-section">
+    <h2>🎯 Pourquoi choisir GabJob ?</h2>
+    <div class="comp-grid">
+      <div class="comp-item">
+        <div class="comp-icon">🇬🇦</div>
+        <div class="comp-title">100% Gabonais</div>
+        <div class="comp-desc">Plateforme conçue par et pour les Gabonais. On comprend votre marché.</div>
+      </div>
+      <div class="comp-item">
+        <div class="comp-icon">⚡</div>
+        <div class="comp-title">Inscription rapide</div>
+        <div class="comp-desc">Créez votre profil en 2 minutes. Aucune carte bancaire requise.</div>
+      </div>
+      <div class="comp-item">
+        <div class="comp-icon">🔒</div>
+        <div class="comp-title">Sécurisé</div>
+        <div class="comp-desc">Vérification par code email. Vos données sont protégées.</div>
+      </div>
+      <div class="comp-item">
+        <div class="comp-icon">💬</div>
+        <div class="comp-title">Support réactif</div>
+        <div class="comp-desc">Notre équipe répond en moins de 24h sur WhatsApp.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-section">
+    <h2>❓ Questions fréquentes</h2>
+    
+    <div class="faq-item">
+      <div class="faq-q">Quels moyens de paiement acceptez-vous ?</div>
+      <div class="faq-a">Nous acceptons Airtel Money et Moov Money. Le paiement se fait directement sur le numéro <strong>+241 074 02 94 67</strong>. Vous remplissez ensuite un formulaire avec votre référence de transaction.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Combien de temps pour activer mon abonnement ?</div>
+      <div class="faq-a">Votre abonnement est activé manuellement par notre équipe sous 2 heures maximum (généralement en 15-30 minutes pendant les heures ouvrées).</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Puis-je annuler mon abonnement ?</div>
+      <div class="faq-a">Oui, à tout moment. Votre abonnement reste actif jusqu'à la fin de la période payée puis n'est pas renouvelé.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Y a-t-il un remboursement possible ?</div>
+      <div class="faq-a">Tout abonnement est non remboursable. Nous étudions au cas par cas en cas de problème technique grave.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Vais-je recevoir une facture ?</div>
+      <div class="faq-a">Oui, une facture est envoyée par email après chaque paiement. Pour les entreprises, nous fournissons une facture avec NIF.</div>
+    </div>
+  </div>
+
+  <!-- CTA WHATSAPP -->
+  <div class="cta-bottom">
+    <h2>Une question avant de vous abonner ?</h2>
+    <p>Contactez-nous directement sur WhatsApp, nous répondons en moins de 24h pour vous guider dans votre choix.</p>
+    <div class="cta-buttons">
+      <a class="btn-wa-cta" href="https://wa.me/24107402946700?text=Bonjour%2C%20j%27ai%20une%20question%20sur%20les%20abonnements%20GabJob" target="_blank">💬 WhatsApp</a>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL PAIEMENT -->
+<div class="modal-bg" id="pay-modal">
+  <div class="modal">
+    <button class="modal-x" onclick="closePayModal()">✕</button>
+
+    <div id="pay-form">
+      <div class="modal-title">💳 <span id="pay-plan-name">Plan</span></div>
+      <div class="modal-sub">Suivez les étapes ci-dessous pour activer votre abonnement.</div>
+
+      <div class="pay-info">
+        <div class="pay-info-label">Montant à payer</div>
+        <div class="pay-info-amount" id="pay-amount">5 000 FCFA</div>
+        <div style="font-size:0.85rem;color:var(--text2);margin-bottom:6px;font-weight:600;">Envoyez Mobile Money sur :</div>
+        <div class="pay-numbers">
+          <div class="pay-num-row">
+            <span>📱 Airtel Money</span>
+            <strong>074 02 94 67</strong>
+          </div>
+          <div class="pay-num-row">
+            <span>📱 Moov Money</span>
+            <strong>074 02 94 67</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="pay-step">
+        <div class="step-num">1</div>
+        <div class="step-content">Envoyez exactement <strong id="pay-step-amount">5 000 FCFA</strong> par Mobile Money au <strong>074 02 94 67</strong></div>
+      </div>
+      <div class="pay-step">
+        <div class="step-num">2</div>
+        <div class="step-content">Notez la <strong>référence de transaction</strong> reçue par SMS</div>
+      </div>
+      <div class="pay-step">
+        <div class="step-num">3</div>
+        <div class="step-content">Remplissez le formulaire ci-dessous, on active votre compte sous 2 heures</div>
+      </div>
+
+      <hr style="border:none; border-top:1px solid var(--border); margin:20px 0;">
+
+      <div class="frow">
+        <div class="fg"><label>Votre nom *</label><input type="text" id="payer-nom" placeholder="Abdel Moustapha"></div>
+        <div class="fg"><label>Téléphone *</label><input type="tel" id="payer-tel" placeholder="074 12 34 56"></div>
+      </div>
+      <div class="fg"><label>Email *</label><input type="email" id="payer-email" placeholder="email@gmail.com"></div>
+      <div class="fg"><label>Numéro qui a payé (Airtel/Moov) *</label><input type="tel" id="payer-mobile" placeholder="074 12 34 56"></div>
+      <div class="fg"><label>Référence transaction (reçue par SMS) *</label><input type="text" id="payer-ref" placeholder="Ex: AM12345678 ou MM98765432"></div>
+      <div class="fg"><label>Opérateur *</label>
+        <select id="payer-operateur">
+          <option value="">Choisir</option>
+          <option value="airtel">Airtel Money</option>
+          <option value="moov">Moov Money</option>
+        </select>
+      </div>
+      <div class="fg"><label>Capture d'écran de la transaction (optionnel)</label>
+        <div class="upload-zone" onclick="document.getElementById('payer-capture').click()">
+          📸 Cliquez pour ajouter une capture
+          <input type="file" id="payer-capture" accept="image/*" style="display:none" onchange="showFileName()">
+          <div class="upload-name" id="upload-name"></div>
+        </div>
+      </div>
+      <div class="fg"><label>Message complémentaire (optionnel)</label>
+        <textarea id="payer-msg" rows="2" placeholder="Toute information utile..."></textarea></div>
+
+      <button class="btn-submit" onclick="submitPayment()">📤 Envoyer ma demande d'activation</button>
+      <div class="msg" id="pay-msg"></div>
+    </div>
+
+    <div class="success-screen" id="success-screen">
+      <div class="success-icon">✅</div>
+      <div class="success-title">Demande envoyée !</div>
+      <div class="success-text">
+        Nous avons bien reçu votre demande d'activation. Notre équipe vérifie le paiement et activera votre compte sous <strong>2 heures maximum</strong>.<br><br>
+        Vous recevrez un <strong>email de confirmation</strong> dès que votre abonnement sera actif.<br><br>
+        En cas de besoin, contactez-nous sur WhatsApp.
+      </div>
+      <a class="btn-wa-cta" href="https://wa.me/24107402946700?text=Bonjour%2C%20j%27ai%20envoy%C3%A9%20ma%20demande%20d%27activation" target="_blank" style="display:inline-block;margin-top:8px;">💬 Me contacter</a>
+    </div>
+  </div>
+</div>
+
+<script src="/static/whatsapp-float.js" defer></script>
+<script>
+let currentPlan = '';
+let currentAmount = 0;
+
+function openPayModal(plan, amount, type) {
+  currentPlan = plan;
+  currentAmount = amount;
+  document.getElementById('pay-plan-name').textContent = plan;
+  document.getElementById('pay-amount').textContent = amount.toLocaleString('fr-FR') + ' FCFA';
+  document.getElementById('pay-step-amount').textContent = amount.toLocaleString('fr-FR') + ' FCFA';
+  document.getElementById('pay-form').style.display = 'block';
+  document.getElementById('success-screen').classList.remove('show');
+  document.getElementById('pay-modal').classList.add('open');
+  document.getElementById('pay-msg').classList.remove('show');
+}
+
+function closePayModal() {
+  document.getElementById('pay-modal').classList.remove('open');
+}
+
+document.getElementById('pay-modal').addEventListener('click', function(e) {
+  if (e.target.id === 'pay-modal') closePayModal();
+});
+
+function showFileName() {
+  const file = document.getElementById('payer-capture').files[0];
+  if (file) {
+    const el = document.getElementById('upload-name');
+    el.textContent = '✅ ' + file.name;
+    el.classList.add('show');
+  }
+}
+
+async function submitPayment() {
+  const nom = document.getElementById('payer-nom').value.trim();
+  const tel = document.getElementById('payer-tel').value.trim();
+  const email = document.getElementById('payer-email').value.trim();
+  const mobile = document.getElementById('payer-mobile').value.trim();
+  const ref = document.getElementById('payer-ref').value.trim();
+  const operateur = document.getElementById('payer-operateur').value;
+  const msg = document.getElementById('payer-msg').value.trim();
+  const capture = document.getElementById('payer-capture').files[0];
+
+  if (!nom || !tel || !email || !mobile || !ref || !operateur) {
+    showMsg('Veuillez remplir tous les champs obligatoires *', 'error');
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('plan', currentPlan);
+  formData.append('amount', currentAmount);
+  formData.append('nom', nom);
+  formData.append('telephone', tel);
+  formData.append('email', email);
+  formData.append('mobile', mobile);
+  formData.append('reference', ref);
+  formData.append('operateur', operateur);
+  formData.append('message', msg);
+  if (capture) formData.append('capture', capture);
+
+  try {
+    const res = await fetch('/api/payment/manual', { method: 'POST', body: formData });
+    if (res.ok) {
+      document.getElementById('pay-form').style.display = 'none';
+      document.getElementById('success-screen').classList.add('show');
+    } else {
+      showMsg('Erreur lors de l\'envoi. Réessayez ou contactez-nous sur WhatsApp.', 'error');
+    }
+  } catch(e) {
+    showMsg('Erreur de connexion. Vérifiez votre internet.', 'error');
+  }
+}
+
+function showMsg(text, type) {
+  const el = document.getElementById('pay-msg');
+  el.textContent = text;
+  el.className = 'msg show ' + type;
+}
+</script>
+</body>
+</html>
