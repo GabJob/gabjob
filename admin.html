@@ -3,753 +3,291 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GabJob — Admin</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <title>Admin - GabJob</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg: #030305; --surface: #0a0a0f; --surface2: #12121a; --surface3: #1a1a24;
-      --border: #1e1e2a; --border2: #2a2a3a;
-      --gold: #c9a84c; --gold2: #f0c96a; --gold3: #8a6a20;
-      --green: #1db954; --blue: #3b82f6; --red: #ef4444; --orange: #f97316; --purple: #8b5cf6;
-      --text: #f0f0f6; --text2: #6666aa; --text3: #3a3a5a;
+      --orange: #f97316; --orange2: #ea580c; --orange3: #fff7ed;
+      --green: #16a34a; --red: #dc2626; --gold: #f59e0b; --blue: #3b82f6;
+      --text: #111827; --text2: #6b7280; --text3: #9ca3af;
+      --bg: #f9fafb; --border: #e5e7eb;
     }
-    html { scroll-behavior: smooth; }
-    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-    /* LOGIN */
-    .login-screen { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center; }
-    .login-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 20px; padding: 48px 40px; width: 100%; max-width: 400px; text-align: center; }
-    .login-logo { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; margin-bottom: 8px; }
-    .login-logo span { color: var(--gold2); }
-    .login-sub { font-size: 0.8rem; color: var(--text2); margin-bottom: 32px; }
-    .login-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); padding: 4px 12px; border-radius: 100px; font-size: 0.72rem; color: var(--red); margin-bottom: 28px; font-weight: 600; }
-    .lf { margin-bottom: 14px; text-align: left; }
-    .lf label { display: block; font-size: 0.7rem; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
-    .lf input { width: 100%; background: var(--surface2); border: 1px solid var(--border2); border-radius: 9px; padding: 12px 14px; color: var(--text); font-size: 0.9rem; font-family: 'DM Sans', sans-serif; outline: none; transition: border-color 0.2s; }
-    .lf input:focus { border-color: var(--gold); }
-    .btn-login { width: 100%; background: linear-gradient(135deg, var(--gold), var(--gold2)); color: #000; border: none; padding: 13px; border-radius: 10px; font-size: 0.95rem; font-weight: 800; cursor: pointer; font-family: 'Syne', sans-serif; margin-top: 8px; transition: all 0.2s; }
-    .btn-login:hover { opacity: 0.88; }
-    .login-err { color: var(--red); font-size: 0.8rem; margin-top: 10px; display: none; }
+    .login-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.92); backdrop-filter: blur(20px); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .login-card { background: #fff; border-radius: 20px; padding: 40px 32px; max-width: 420px; width: 100%; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.3); }
+    .login-icon { font-size: 3rem; margin-bottom: 14px; }
+    .login-title { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800; margin-bottom: 6px; }
+    .login-sub { color: var(--text2); font-size: 0.88rem; margin-bottom: 24px; }
+    .fg { margin-bottom: 14px; text-align: left; }
+    .fg label { display: block; font-size: 0.72rem; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .fg input, .fg select { width: 100%; background: var(--bg); border: 1.5px solid var(--border); border-radius: 9px; padding: 11px 14px; font-size: 0.9rem; outline: none; -webkit-appearance: none; }
+    .fg input:focus { border-color: var(--orange); }
+    .btn-primary { background: linear-gradient(135deg, var(--orange), var(--orange2)); color: #fff; border: none; padding: 13px 22px; border-radius: 10px; font-size: 0.92rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 16px rgba(249,115,22,0.3); width: 100%; font-family: 'DM Sans', sans-serif; }
+    .msg { font-size: 0.82rem; margin-top: 12px; padding: 10px 14px; border-radius: 8px; display: none; text-align: center; }
+    .msg.show { display: block; }
+    .msg.error { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
 
-    /* LAYOUT */
-    .app { display: flex; min-height: 100vh; }
+    nav { position: sticky; top: 0; z-index: 100; padding: 14px 28px; background: linear-gradient(135deg, #111827, #1f2937); color: #fff; display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 800; color: #fff; }
+    .logo span { color: var(--orange); }
+    .admin-badge { display: inline-block; background: var(--gold); color: #fff; padding: 3px 10px; border-radius: 100px; font-size: 0.65rem; font-weight: 800; letter-spacing: 1px; margin-left: 8px; }
+    .btn-logout { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 7px 14px; border-radius: 8px; font-size: 0.78rem; color: #fff; cursor: pointer; font-family: 'DM Sans', sans-serif; }
 
-    /* SIDEBAR */
-    .sidebar { width: 240px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; }
-    .sb-logo { padding: 22px 18px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
-    .sb-logo-icon { width: 28px; height: 28px; background: linear-gradient(135deg, var(--gold), var(--gold2)); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; }
-    .sb-logo-text { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 800; }
-    .sb-logo-text span { color: var(--gold2); }
-    .sb-logo-badge { margin-left: auto; background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); padding: 2px 8px; border-radius: 100px; font-size: 0.6rem; font-weight: 700; color: var(--red); }
-    .sb-nav { flex: 1; padding: 12px 8px; overflow-y: auto; }
-    .sb-label { font-size: 0.6rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text3); padding: 0 10px; margin: 12px 0 5px; }
-    .sb-item { display: flex; align-items: center; gap: 9px; padding: 9px 10px; border-radius: 8px; cursor: pointer; font-size: 0.82rem; font-weight: 500; color: var(--text2); transition: all 0.2s; margin-bottom: 1px; border: 1px solid transparent; }
-    .sb-item:hover { background: var(--surface2); color: var(--text); }
-    .sb-item.active { background: rgba(201,168,76,0.1); color: var(--gold2); border-color: rgba(201,168,76,0.15); }
-    .sb-item .si { font-size: 0.9rem; width: 16px; text-align: center; }
-    .sb-badge { margin-left: auto; font-size: 0.6rem; font-weight: 700; padding: 2px 6px; border-radius: 100px; }
-    .sb-badge.r { background: var(--red); color: #fff; }
-    .sb-badge.g { background: rgba(29,185,84,0.2); color: var(--green); }
-    .sb-badge.b { background: rgba(59,130,246,0.2); color: var(--blue); }
-    .sb-bottom { padding: 12px 8px; border-top: 1px solid var(--border); }
-    .sb-admin { display: flex; align-items: center; gap: 10px; padding: 10px; background: var(--surface2); border-radius: 10px; }
-    .sb-av { width: 32px; height: 32px; border-radius: 8px; background: linear-gradient(135deg, var(--red), #dc2626); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 800; color: #fff; flex-shrink: 0; }
-    .sb-admin-info { flex: 1; min-width: 0; }
-    .sb-admin-name { font-size: 0.8rem; font-weight: 600; }
-    .sb-admin-role { font-size: 0.65rem; color: var(--red); }
+    .container { max-width: 1280px; margin: 0 auto; padding: 28px 24px 60px; }
+    h1 { font-family: 'Syne', sans-serif; font-size: 1.7rem; font-weight: 800; margin-bottom: 6px; letter-spacing: -1px; }
+    .subtitle { color: var(--text2); font-size: 0.92rem; margin-bottom: 28px; }
 
-    /* MAIN */
-    .main { margin-left: 240px; flex: 1; }
-    .topbar { position: sticky; top: 0; z-index: 50; background: rgba(3,3,5,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 13px 24px; display: flex; align-items: center; justify-content: space-between; }
-    .tb-title { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; }
-    .tb-right { display: flex; align-items: center; gap: 10px; }
-    .tb-time { font-size: 0.72rem; color: var(--text2); }
-    .btn-logout { background: transparent; border: 1px solid var(--border2); color: var(--text2); padding: 6px 14px; border-radius: 7px; font-size: 0.75rem; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
-    .btn-logout:hover { border-color: var(--red); color: var(--red); }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 32px; }
+    .stat { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+    .stat-icon { font-size: 1.6rem; margin-bottom: 6px; }
+    .stat-val { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+    .stat-val.orange { color: var(--orange); }
+    .stat-val.green { color: var(--green); }
+    .stat-val.blue { color: var(--blue); }
+    .stat-lbl { font-size: 0.78rem; color: var(--text2); font-weight: 600; }
 
-    /* CONTENT */
-    .content { padding: 24px; }
-    .page { display: none; animation: fadeUp 0.3s ease both; }
-    .page.active { display: block; }
-    @keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+    .tabs { display: flex; gap: 6px; margin-bottom: 20px; border-bottom: 1px solid var(--border); overflow-x: auto; }
+    .tab { background: none; border: none; padding: 12px 18px; font-size: 0.92rem; font-weight: 600; color: var(--text2); cursor: pointer; font-family: 'DM Sans', sans-serif; border-bottom: 3px solid transparent; white-space: nowrap; }
+    .tab.active { color: var(--orange); border-bottom-color: var(--orange); }
 
-    /* STATS GRID */
-    .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 20px; }
-    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; position: relative; overflow: hidden; transition: border-color 0.2s; }
-    .stat-card:hover { border-color: var(--border2); }
-    .stat-card::before { content: ''; position: absolute; inset: 0; opacity: 0.03; }
-    .sc-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
-    .sc-icon { width: 36px; height: 36px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
-    .sc-trend { font-size: 0.65rem; font-weight: 600; padding: 2px 7px; border-radius: 100px; }
-    .t-up { background: rgba(29,185,84,0.1); color: var(--green); }
-    .t-down { background: rgba(239,68,68,0.1); color: var(--red); }
-    .t-new { background: rgba(201,168,76,0.1); color: var(--gold); }
-    .sc-val { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; margin-bottom: 3px; }
-    .sc-label { font-size: 0.72rem; color: var(--text2); }
+    .toolbar { display: flex; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+    .toolbar input { flex: 1; min-width: 220px; background: #fff; border: 1.5px solid var(--border); border-radius: 10px; padding: 11px 16px; font-size: 0.9rem; outline: none; -webkit-appearance: none; }
+    .toolbar select { background: #fff; border: 1.5px solid var(--border); border-radius: 10px; padding: 11px 16px; font-size: 0.88rem; outline: none; cursor: pointer; min-width: 160px; }
 
-    /* TABLE */
-    .table-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 20px; }
-    .table-head { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-    .table-title { font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 700; }
-    .table-actions { display: flex; gap: 8px; align-items: center; }
-    .t-search { background: var(--surface2); border: 1px solid var(--border2); border-radius: 7px; padding: 7px 12px; color: var(--text); font-size: 0.78rem; font-family: 'DM Sans', sans-serif; outline: none; transition: border-color 0.2s; width: 200px; }
-    .t-search:focus { border-color: var(--gold); }
-    .t-filter { background: var(--surface2); border: 1px solid var(--border2); border-radius: 7px; padding: 7px 12px; color: var(--text2); font-size: 0.78rem; font-family: 'DM Sans', sans-serif; outline: none; -webkit-appearance: none; cursor: pointer; }
+    .table-wrap { background: #fff; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; }
-    th { padding: 10px 20px; text-align: left; font-size: 0.65rem; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); }
-    td { padding: 12px 20px; font-size: 0.82rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
-    tr:last-child td { border-bottom: none; }
-    tr:hover td { background: rgba(255,255,255,0.01); }
-    .td-av { display: flex; align-items: center; gap: 10px; }
-    .td-avatar { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; color: #000; font-family: 'Syne', sans-serif; flex-shrink: 0; }
-    .td-name { font-weight: 600; font-size: 0.82rem; }
-    .td-sub { font-size: 0.7rem; color: var(--text2); margin-top: 1px; }
+    th { background: var(--bg); padding: 12px 14px; text-align: left; font-size: 0.72rem; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+    td { padding: 14px; font-size: 0.86rem; border-bottom: 1px solid var(--border); }
+    tr:hover { background: var(--bg); }
+    .user-cell { display: flex; align-items: center; gap: 10px; }
+    .user-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--orange), var(--orange2)); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0; }
+    .user-name { font-weight: 700; font-size: 0.92rem; }
+    .user-email { font-size: 0.78rem; color: var(--text2); }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 100px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.3px; }
+    .badge-candidat { background: #dbeafe; color: #1e40af; }
+    .badge-recruteur { background: #fef3c7; color: #92400e; }
+    .badge-technicien { background: #f3e8ff; color: #6b21a8; }
+    .badge-active { background: #dcfce7; color: #15803d; }
+    .badge-inactive { background: #fee2e2; color: #991b1b; }
+    .badge-premium { background: linear-gradient(135deg, var(--gold), #d97706); color: #fff; }
+    .actions-cell { display: flex; gap: 6px; flex-wrap: wrap; }
+    .btn-action { padding: 6px 12px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; cursor: pointer; border: 1px solid; font-family: 'DM Sans', sans-serif; transition: all 0.15s; white-space: nowrap; }
+    .btn-activer { background: #dcfce7; color: #15803d; border-color: #86efac; }
+    .btn-desactiver { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
 
-    /* BADGES */
-    .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 100px; font-size: 0.68rem; font-weight: 600; }
-    .badge-green { background: rgba(29,185,84,0.1); color: var(--green); border: 1px solid rgba(29,185,84,0.2); }
-    .badge-red { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
-    .badge-gold { background: rgba(201,168,76,0.1); color: var(--gold2); border: 1px solid rgba(201,168,76,0.2); }
-    .badge-blue { background: rgba(59,130,246,0.1); color: var(--blue); border: 1px solid rgba(59,130,246,0.2); }
-    .badge-purple { background: rgba(139,92,246,0.1); color: var(--purple); border: 1px solid rgba(139,92,246,0.2); }
-    .badge-gray { background: var(--surface2); color: var(--text2); border: 1px solid var(--border2); }
+    .empty { text-align: center; padding: 60px 20px; color: var(--text2); }
+    .empty-icon { font-size: 3rem; opacity: 0.5; margin-bottom: 10px; }
 
-    /* ACTION BTNS */
-    .action-btns { display: flex; gap: 5px; }
-    .btn-act { background: var(--surface2); border: 1px solid var(--border2); color: var(--text2); padding: 5px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; white-space: nowrap; }
-    .btn-act:hover { border-color: var(--gold); color: var(--gold); }
-    .btn-act.danger:hover { border-color: var(--red); color: var(--red); }
-    .btn-act.success:hover { border-color: var(--green); color: var(--green); }
-
-    /* CHARTS AREA */
-    .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
-    .chart-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
-    .chart-title { font-family: 'Syne', sans-serif; font-size: 0.875rem; font-weight: 700; margin-bottom: 16px; }
-    .chart-bars { display: flex; align-items: flex-end; gap: 8px; height: 120px; }
-    .chart-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; justify-content: flex-end; }
-    .chart-bar { width: 100%; border-radius: 4px 4px 0 0; transition: height 1s ease; min-height: 4px; }
-    .chart-bar-label { font-size: 0.6rem; color: var(--text3); }
-    .chart-bar-val { font-size: 0.65rem; color: var(--text2); font-weight: 600; }
-    .donut-wrap { display: flex; gap: 20px; align-items: center; }
-    .donut { width: 100px; height: 100px; border-radius: 50%; flex-shrink: 0; }
-    .donut-legend { display: flex; flex-direction: column; gap: 8px; }
-    .dl-item { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; }
-    .dl-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-    .dl-val { margin-left: auto; font-weight: 700; color: var(--text); }
-
-    /* ACTIVITE RECENTE */
-    .activity-list { display: flex; flex-direction: column; gap: 10px; }
-    .act-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px; background: var(--surface2); border-radius: 10px; }
-    .act-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0; }
-    .act-content { flex: 1; }
-    .act-title { font-size: 0.82rem; font-weight: 600; margin-bottom: 2px; }
-    .act-desc { font-size: 0.75rem; color: var(--text2); }
-    .act-time { font-size: 0.68rem; color: var(--text3); margin-top: 3px; }
-
-    /* TOAST */
-    .toast { position: fixed; bottom: 20px; right: 20px; background: var(--surface2); border: 1px solid var(--border2); color: var(--text); padding: 11px 16px; border-radius: 9px; font-size: 0.82rem; font-weight: 500; z-index: 9999; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
-    .toast.show { display: block; animation: slideIn 0.3s ease; }
-    @keyframes slideIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
-
-    /* MODAL CONFIRM */
-    .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 1000; display: none; align-items: center; justify-content: center; }
-    .modal-bg.open { display: flex; }
-    .modal { background: var(--surface); border: 1px solid var(--border2); border-radius: 16px; padding: 32px; width: 100%; max-width: 400px; text-align: center; }
-    .modal-icon { font-size: 2.5rem; margin-bottom: 14px; }
-    .modal-h { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 800; margin-bottom: 8px; }
-    .modal-p { font-size: 0.82rem; color: var(--text2); margin-bottom: 24px; line-height: 1.6; }
-    .modal-btns { display: flex; gap: 10px; }
-    .btn-confirm { flex: 1; background: var(--red); color: #fff; border: none; padding: 11px; border-radius: 9px; font-size: 0.875rem; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
-    .btn-cancel { flex: 1; background: var(--surface2); border: 1px solid var(--border2); color: var(--text); padding: 11px; border-radius: 9px; font-size: 0.875rem; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(120%); background: var(--text); color: #fff; padding: 14px 22px; border-radius: 10px; font-size: 0.88rem; font-weight: 600; z-index: 2000; transition: transform 0.25s; max-width: 90%; }
+    .toast.show { transform: translateX(-50%) translateY(0); }
 
     @media(max-width:768px) {
-      .sidebar { transform: translateX(-100%); }
-      .main { margin-left: 0; }
-      .stats-grid { grid-template-columns: 1fr 1fr; }
-      .charts-grid { grid-template-columns: 1fr; }
-      .content { padding: 16px; }
+      nav { padding: 12px 16px; }
+      .container { padding: 20px 14px 40px; }
+      h1 { font-size: 1.3rem; }
+      th, td { padding: 10px 8px; font-size: 0.78rem; }
+      .user-email { display: none; }
     }
   </style>
 </head>
 <body>
 
-<!-- LOGIN -->
-<div class="login-screen" id="login-screen">
+<div class="login-overlay" id="login-overlay">
   <div class="login-card">
-    <div class="login-logo">Gab<span>Job</span></div>
-    <div class="login-sub">Panneau d'administration</div>
-    <div class="login-badge">🔒 Accès restreint</div>
-    <div class="lf"><label>Identifiant admin</label><input type="text" id="l-user" placeholder="admin"></div>
-    <div class="lf"><label>Mot de passe</label><input type="password" id="l-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
-    <button class="btn-login" onclick="doLogin()">Connexion →</button>
-    <div class="login-err" id="l-err">Identifiants incorrects</div>
+    <div class="login-icon">🔐</div>
+    <div class="login-title">Espace Admin</div>
+    <div class="login-sub">Connexion réservée à l'administrateur</div>
+    <div class="fg"><label>Identifiant</label><input type="text" id="login-user" placeholder="admin"></div>
+    <div class="fg"><label>Mot de passe</label><input type="password" id="login-pass" placeholder="••••••••"></div>
+    <button class="btn-primary" onclick="adminLogin()">Se connecter →</button>
+    <div class="msg" id="login-msg"></div>
   </div>
 </div>
 
-<!-- APP -->
-<div class="app" id="app" style="display:none;">
+<nav id="main-nav" style="display:none;">
+  <div class="logo">Gab<span>Job</span><span class="admin-badge">ADMIN</span></div>
+  <button class="btn-logout" onclick="adminLogout()">Déconnexion</button>
+</nav>
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="sb-logo">
-      <div class="sb-logo-icon">💼</div>
-      <div class="sb-logo-text">Gab<span>Job</span></div>
-      <div class="sb-logo-badge">ADMIN</div>
-    </div>
-    <nav class="sb-nav">
-      <div class="sb-label">Vue d'ensemble</div>
-      <div class="sb-item active" onclick="go('dashboard',this)"><span class="si">📊</span>Dashboard</div>
-      <div class="sb-item" onclick="go('activite',this)"><span class="si">⚡</span>Activité récente<span class="sb-badge r">8</span></div>
+<main id="main" style="display:none;">
+  <div class="container">
+    <h1>Tableau de bord administrateur</h1>
+    <p class="subtitle">Gérez les utilisateurs et activez les abonnements payants.</p>
 
-      <div class="sb-label">Utilisateurs</div>
-      <div class="sb-item" onclick="go('candidats',this)"><span class="si">👤</span>Candidats<span class="sb-badge g" id="sb-nb-candidats">0</span></div>
-      <div class="sb-item" onclick="go('recruteurs',this)"><span class="si">🏢</span>Recruteurs<span class="sb-badge b" id="sb-nb-recruteurs">0</span></div>
-      <div class="sb-item" onclick="go('techniciens',this)"><span class="si">🔧</span>Techniciens<span class="sb-badge g" id="sb-nb-techniciens">0</span></div>
-
-      <div class="sb-label">Contenu</div>
-      <div class="sb-item" onclick="go('offres',this)"><span class="si">📋</span>Offres d'emploi</div>
-      <div class="sb-item" onclick="go('abonnements',this)"><span class="si">💳</span>Abonnements</div>
-
-      <div class="sb-label">Système</div>
-      <div class="sb-item" onclick="go('parametres',this)"><span class="si">⚙️</span>Paramètres</div>
-    </nav>
-    <div class="sb-bottom">
-      <div class="sb-admin">
-        <div class="sb-av">A</div>
-        <div class="sb-admin-info">
-          <div class="sb-admin-name">Administrateur</div>
-          <div class="sb-admin-role">Super Admin</div>
-        </div>
-      </div>
-    </div>
-  </aside>
-
-  <!-- MAIN -->
-  <main class="main">
-    <div class="topbar">
-      <div class="tb-title" id="tb-title">Dashboard</div>
-      <div class="tb-right">
-        <div class="tb-time" id="tb-time"></div>
-        <button class="btn-logout" onclick="doLogout()">🚪 Déconnexion</button>
-      </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-icon">👥</div><div class="stat-val" id="stat-total">0</div><div class="stat-lbl">Total utilisateurs</div></div>
+      <div class="stat"><div class="stat-icon">⭐</div><div class="stat-val orange" id="stat-premium">0</div><div class="stat-lbl">Abonnés Premium</div></div>
+      <div class="stat"><div class="stat-icon">👤</div><div class="stat-val blue" id="stat-candidats">0</div><div class="stat-lbl">Candidats</div></div>
+      <div class="stat"><div class="stat-icon">🏢</div><div class="stat-val" id="stat-recruteurs">0</div><div class="stat-lbl">Recruteurs</div></div>
+      <div class="stat"><div class="stat-icon">🔧</div><div class="stat-val green" id="stat-techniciens">0</div><div class="stat-lbl">Techniciens</div></div>
     </div>
 
-    <div class="content">
-
-      <!-- DASHBOARD -->
-      <div class="page active" id="page-dashboard">
-        <div style="margin-bottom:18px;">
-          <h2 style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;margin-bottom:4px;">Vue d'ensemble</h2>
-          <p style="color:var(--text2);font-size:0.82rem;">Bienvenue dans le panneau d'administration GabJob.</p>
-        </div>
-
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="sc-top">
-              <div class="sc-icon" style="background:rgba(29,185,84,0.1);">👤</div>
-              <div class="sc-trend t-up" id="st-candidats-trend">+12 ce mois</div>
-            </div>
-            <div class="sc-val" style="color:var(--green)" id="st-candidats">0</div>
-            <div class="sc-label">Candidats inscrits</div>
-          </div>
-          <div class="stat-card">
-            <div class="sc-top">
-              <div class="sc-icon" style="background:rgba(59,130,246,0.1);">🏢</div>
-              <div class="sc-trend t-new" id="st-recruteurs-trend">+3 ce mois</div>
-            </div>
-            <div class="sc-val" style="color:var(--blue)" id="st-recruteurs">0</div>
-            <div class="sc-label">Recruteurs actifs</div>
-          </div>
-          <div class="stat-card">
-            <div class="sc-top">
-              <div class="sc-icon" style="background:rgba(249,115,22,0.1);">🔧</div>
-              <div class="sc-trend t-up" id="st-techniciens-trend">+5 ce mois</div>
-            </div>
-            <div class="sc-val" style="color:var(--orange)" id="st-techniciens">0</div>
-            <div class="sc-label">Techniciens actifs</div>
-          </div>
-          <div class="stat-card">
-            <div class="sc-top">
-              <div class="sc-icon" style="background:rgba(201,168,76,0.1);">📋</div>
-              <div class="sc-trend t-new">Actives</div>
-            </div>
-            <div class="sc-val" style="color:var(--gold2)" id="st-offres">0</div>
-            <div class="sc-label">Offres publiées</div>
-          </div>
-        </div>
-
-        <div class="charts-grid">
-          <div class="chart-card">
-            <div class="chart-title">📈 Inscriptions (7 derniers jours)</div>
-            <div class="chart-bars" id="chart-inscriptions">
-              <div class="chart-bar-wrap"><div class="chart-bar" style="height:40%;background:linear-gradient(180deg,var(--green),rgba(29,185,84,0.3));"></div><div class="chart-bar-label">Lun</div><div class="chart-bar-val">4</div></div>
-              <div class="chart-bar-wrap"><div class="chart-bar" style="height:70%;background:linear-gradient(180deg,var(--green),rgba(29,185,84,0.3));"></div><div class="chart-bar-label">Mar</div><div class="chart-bar-val">7</div></div>
-              <div class="chart-bar-wrap"><div class="chart-bar" style="height:55%;background:linear-gradient(180deg,var(--green),rgba(29,185,84,0.3));"></div><div class="chart-bar-label">Mer</div><div class="chart-bar-val">5</div></div>
-              <div class="chart-bar-wrap"><div class="chart-bar" style="height:90%;background:linear-gradient(180deg,var(--green),rgba(29,185,84,0.3));"></div><div class="chart-bar-label">Jeu</div><div class="chart-bar-val">9</div></div>
-              <div class="chart-bar-wrap"><div class="chart-bar" style="height:60%;background:linear-gradient(180deg,var(--green),rgba(29,185,84,0.3));"></div><div class="chart-bar-label">Ven</div><div class="chart-bar-val">6</div></div>
-              <div class="chart-bar-wrap"><div class="chart-bar" style="height:35%;background:linear-gradient(180deg,var(--green),rgba(29,185,84,0.3));"></div><div class="chart-bar-label">Sam</div><div class="chart-bar-val">3</div></div>
-              <div class="chart-bar-wrap"><div class="chart-bar" style="height:25%;background:linear-gradient(180deg,var(--green),rgba(29,185,84,0.3));"></div><div class="chart-bar-label">Dim</div><div class="chart-bar-val">2</div></div>
-            </div>
-          </div>
-          <div class="chart-card">
-            <div class="chart-title">🥧 Répartition des utilisateurs</div>
-            <div class="donut-wrap">
-              <div class="donut" style="background:conic-gradient(var(--green) 0% 60%, var(--blue) 60% 80%, var(--orange) 80% 100%);"></div>
-              <div class="donut-legend">
-                <div class="dl-item"><div class="dl-dot" style="background:var(--green)"></div>Candidats<span class="dl-val">60%</span></div>
-                <div class="dl-item"><div class="dl-dot" style="background:var(--blue)"></div>Recruteurs<span class="dl-val">20%</span></div>
-                <div class="dl-item"><div class="dl-dot" style="background:var(--orange)"></div>Techniciens<span class="dl-val">20%</span></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-          <div style="font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;">Dernières inscriptions</div>
-          <div onclick="go('candidats',null)" style="font-size:0.75rem;color:var(--gold);cursor:pointer;">Voir tout →</div>
-        </div>
-        <div class="table-card">
-          <table>
-            <thead><tr><th>Utilisateur</th><th>Type</th><th>Date</th><th>Statut</th><th>Actions</th></tr></thead>
-            <tbody id="dash-recent"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- ACTIVITE -->
-      <div class="page" id="page-activite">
-        <div style="margin-bottom:18px;"><h2 style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;">Activité récente</h2></div>
-        <div class="activity-list" id="act-list"></div>
-      </div>
-
-      <!-- CANDIDATS -->
-      <div class="page" id="page-candidats">
-        <div style="margin-bottom:18px;"><h2 style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;">Candidats</h2><p style="color:var(--text2);font-size:0.82rem;margin-top:4px;" id="candidats-count">Chargement...</p></div>
-        <div class="table-card">
-          <div class="table-head">
-            <div class="table-title">Liste des candidats</div>
-            <div class="table-actions">
-              <input class="t-search" type="text" placeholder="Rechercher..." oninput="filterTable('candidats-tbody',this.value)">
-              <select class="t-filter"><option>Tous</option><option>Actifs</option><option>Inactifs</option></select>
-            </div>
-          </div>
-          <table>
-            <thead><tr><th>Candidat</th><th>Téléphone</th><th>Type</th><th>Inscription</th><th>Statut</th><th>Actions</th></tr></thead>
-            <tbody id="candidats-tbody"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- RECRUTEURS -->
-      <div class="page" id="page-recruteurs">
-        <div style="margin-bottom:18px;"><h2 style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;">Recruteurs</h2><p style="color:var(--text2);font-size:0.82rem;margin-top:4px;" id="recruteurs-count">Chargement...</p></div>
-        <div class="table-card">
-          <div class="table-head">
-            <div class="table-title">Liste des recruteurs</div>
-            <div class="table-actions">
-              <input class="t-search" type="text" placeholder="Rechercher..." oninput="filterTable('recruteurs-tbody',this.value)">
-            </div>
-          </div>
-          <table>
-            <thead><tr><th>Recruteur</th><th>Téléphone</th><th>Inscription</th><th>Abonnement</th><th>Statut</th><th>Actions</th></tr></thead>
-            <tbody id="recruteurs-tbody"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- TECHNICIENS -->
-      <div class="page" id="page-techniciens">
-        <div style="margin-bottom:18px;"><h2 style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;">Techniciens</h2><p style="color:var(--text2);font-size:0.82rem;margin-top:4px;" id="techniciens-count">Chargement...</p></div>
-        <div class="table-card">
-          <div class="table-head">
-            <div class="table-title">Liste des techniciens</div>
-            <div class="table-actions">
-              <input class="t-search" type="text" placeholder="Rechercher..." oninput="filterTable('techniciens-tbody',this.value)">
-              <select class="t-filter" onchange="filterTechniciens(this.value)">
-                <option value="">Tous</option>
-                <option value="actif">Abonnement actif</option>
-                <option value="inactif">Sans abonnement</option>
-              </select>
-            </div>
-          </div>
-          <table>
-            <thead><tr><th>Technicien</th><th>Spécialité</th><th>Zone</th><th>Téléphone</th><th>Abonnement</th><th>Actions</th></tr></thead>
-            <tbody id="techniciens-tbody"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- OFFRES -->
-      <div class="page" id="page-offres">
-        <div style="margin-bottom:18px;"><h2 style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;">Offres d'emploi</h2></div>
-        <div class="table-card">
-          <div class="table-head">
-            <div class="table-title">Liste des offres</div>
-            <div class="table-actions">
-              <input class="t-search" type="text" placeholder="Rechercher...">
-            </div>
-          </div>
-          <table>
-            <thead><tr><th>Titre</th><th>Catégorie</th><th>Quartier</th><th>Statut</th><th>Date</th><th>Actions</th></tr></thead>
-            <tbody id="offres-tbody"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- ABONNEMENTS -->
-      <div class="page" id="page-abonnements">
-        <div style="margin-bottom:18px;"><h2 style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;">Abonnements</h2></div>
-        <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);">
-          <div class="stat-card">
-            <div class="sc-top"><div class="sc-icon" style="background:rgba(29,185,84,0.1);">💰</div><div class="sc-trend t-up">Ce mois</div></div>
-            <div class="sc-val" style="color:var(--green)">0</div>
-            <div class="sc-label">Revenus candidats (FCFA)</div>
-          </div>
-          <div class="stat-card">
-            <div class="sc-top"><div class="sc-icon" style="background:rgba(59,130,246,0.1);">💰</div><div class="sc-trend t-up">Ce mois</div></div>
-            <div class="sc-val" style="color:var(--blue)">0</div>
-            <div class="sc-label">Revenus recruteurs (FCFA)</div>
-          </div>
-          <div class="stat-card">
-            <div class="sc-top"><div class="sc-icon" style="background:rgba(249,115,22,0.1);">💰</div><div class="sc-trend t-up">Ce mois</div></div>
-            <div class="sc-val" style="color:var(--orange)">0</div>
-            <div class="sc-label">Revenus techniciens (FCFA)</div>
-          </div>
-        </div>
-        <div class="table-card">
-          <div class="table-head"><div class="table-title">Historique abonnements</div></div>
-          <table>
-            <thead><tr><th>Utilisateur</th><th>Type</th><th>Montant</th><th>Date</th><th>Statut</th></tr></thead>
-            <tbody id="abo-tbody">
-              <tr><td colspan="5" style="text-align:center;color:var(--text2);padding:32px;">Aucun abonnement enregistré</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- PARAMETRES -->
-      <div class="page" id="page-parametres">
-        <div style="margin-bottom:18px;"><h2 style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;">Paramètres</h2></div>
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px;">
-          <div style="font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);">⚙️ Configuration GabJob</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-            <div><label style="display:block;font-size:0.68rem;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Tarif candidat premium (FCFA/mois)</label><input type="number" value="5000" style="width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:9px;padding:10px 13px;color:var(--text);font-size:0.875rem;font-family:'DM Sans',sans-serif;outline:none;"></div>
-            <div><label style="display:block;font-size:0.68rem;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Tarif recruteur (FCFA/an)</label><input type="number" value="120000" style="width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:9px;padding:10px 13px;color:var(--text);font-size:0.875rem;font-family:'DM Sans',sans-serif;outline:none;"></div>
-            <div><label style="display:block;font-size:0.68rem;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Tarif technicien (FCFA/mois)</label><input type="number" value="10000" style="width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:9px;padding:10px 13px;color:var(--text);font-size:0.875rem;font-family:'DM Sans',sans-serif;outline:none;"></div>
-            <div><label style="display:block;font-size:0.68rem;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Tarif CV generator (FCFA unique)</label><input type="number" value="10000" style="width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:9px;padding:10px 13px;color:var(--text);font-size:0.875rem;font-family:'DM Sans',sans-serif;outline:none;"></div>
-          </div>
-          <button style="margin-top:16px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;border:none;padding:11px 24px;border-radius:9px;font-size:0.875rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;" onclick="toast('✅ Paramètres sauvegardés')">💾 Sauvegarder</button>
-        </div>
-        <div style="background:var(--surface);border:1px solid rgba(239,68,68,0.2);border-radius:12px;padding:24px;">
-          <div style="font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;margin-bottom:12px;color:var(--red);">⚠️ Zone dangereuse</div>
-          <p style="font-size:0.82rem;color:var(--text2);margin-bottom:16px;">Ces actions sont irréversibles. Procédez avec précaution.</p>
-          <button style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:var(--red);padding:9px 18px;border-radius:8px;font-size:0.8rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;" onclick="openConfirm('Réinitialiser la base de données ?','Cette action supprimera TOUTES les données.','resetDB')">🗑️ Réinitialiser la BDD</button>
-        </div>
-      </div>
-
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('all', this)">📋 Tous</button>
+      <button class="tab" onclick="switchTab('premium', this)">⭐ Premium</button>
+      <button class="tab" onclick="switchTab('inactif', this)">⏸️ Inactifs</button>
     </div>
-  </main>
-</div>
 
-<!-- MODAL CONFIRM -->
-<div class="modal-bg" id="modal-confirm">
-  <div class="modal">
-    <div class="modal-icon" id="mc-icon">⚠️</div>
-    <div class="modal-h" id="mc-title">Confirmer l'action</div>
-    <div class="modal-p" id="mc-desc">Êtes-vous sûr de vouloir effectuer cette action ?</div>
-    <div class="modal-btns">
-      <button class="btn-cancel" onclick="closeConfirm()">Annuler</button>
-      <button class="btn-confirm" id="mc-btn" onclick="execConfirm()">Confirmer</button>
+    <div class="toolbar">
+      <input type="text" id="search-input" placeholder="🔍 Rechercher (nom, email, téléphone)..." oninput="renderUsers()">
+      <select id="filter-type" onchange="renderUsers()">
+        <option value="">Tous les types</option>
+        <option value="candidat">👤 Candidat</option>
+        <option value="recruteur">🏢 Recruteur</option>
+        <option value="technicien">🔧 Technicien</option>
+      </select>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Utilisateur</th>
+            <th>Type</th>
+            <th>Téléphone</th>
+            <th>Statut</th>
+            <th>Inscrit</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="users-tbody">
+          <tr><td colspan="6" class="empty"><div class="empty-icon">⏳</div>Chargement...</td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
-</div>
+</main>
 
 <div class="toast" id="toast"></div>
 
 <script>
-  const API = 'http://127.0.0.1:5000';
-  const ADMIN_USER = 'admin';
-  const ADMIN_PASS = 'GabJob@Admin2026';
-  let confirmAction = null;
+const API = '';
+let token = localStorage.getItem('gabjob_admin_token') || null;
+let allUsers = [];
+let currentFilter = 'all';
 
-  // ─── AUTH ─────────────────────────────────────────────
-  function doLogin() {
-    const u = document.getElementById('l-user').value;
-    const p = document.getElementById('l-pass').value;
-    if (u === ADMIN_USER && p === ADMIN_PASS) {
-      document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('app').style.display = 'flex';
-      sessionStorage.setItem('admin_logged', '1');
-      loadAll();
-      startClock();
+async function adminLogin() {
+  const username = document.getElementById('login-user').value.trim();
+  const password = document.getElementById('login-pass').value.trim();
+  if (!username || !password) { showMsg('login-msg', 'Identifiant et mot de passe requis', 'error'); return; }
+  try {
+    const res = await fetch(API + '/api/admin/login', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({username, password})
+    });
+    const data = await res.json();
+    if (res.ok && data.token) {
+      token = data.token;
+      localStorage.setItem('gabjob_admin_token', token);
+      showApp();
     } else {
-      document.getElementById('l-err').style.display = 'block';
+      showMsg('login-msg', data.erreur || 'Identifiants incorrects', 'error');
     }
+  } catch(e) {
+    showMsg('login-msg', 'Erreur de connexion', 'error');
   }
+}
 
-  function doLogout() {
-    sessionStorage.removeItem('admin_logged');
-    document.getElementById('login-screen').style.display = 'flex';
-    document.getElementById('app').style.display = 'none';
-  }
+function adminLogout() {
+  localStorage.removeItem('gabjob_admin_token');
+  token = null;
+  document.getElementById('login-overlay').style.display = 'flex';
+  document.getElementById('main-nav').style.display = 'none';
+  document.getElementById('main').style.display = 'none';
+}
 
-  // Auto-login si session active
-  if (sessionStorage.getItem('admin_logged')) {
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('app').style.display = 'flex';
-    loadAll();
-    startClock();
-  }
+function showApp() {
+  document.getElementById('login-overlay').style.display = 'none';
+  document.getElementById('main-nav').style.display = 'flex';
+  document.getElementById('main').style.display = 'block';
+  loadUsers();
+}
 
-  // ─── HORLOGE ──────────────────────────────────────────
-  function startClock() {
-    function tick() {
-      const now = new Date();
-      document.getElementById('tb-time').textContent = now.toLocaleString('fr-FR', { dateStyle:'short', timeStyle:'short' });
-    }
-    tick(); setInterval(tick, 1000);
-  }
-
-  // ─── NAVIGATION ───────────────────────────────────────
-  function go(name, el) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
-    document.getElementById('page-' + name).classList.add('active');
-    if (el) el.classList.add('active');
-    const titles = { dashboard:'Dashboard', activite:'Activité récente', candidats:'Candidats', recruteurs:'Recruteurs', techniciens:'Techniciens', offres:'Offres d\'emploi', abonnements:'Abonnements', parametres:'Paramètres' };
-    document.getElementById('tb-title').textContent = titles[name] || name;
-    if (name === 'candidats') loadCandidats();
-    if (name === 'recruteurs') loadRecruteurs();
-    if (name === 'techniciens') loadTechniciens();
-    if (name === 'offres') loadOffres();
-    if (name === 'activite') renderActivite();
-  }
-
-  // ─── LOAD ALL ─────────────────────────────────────────
-  async function loadAll() {
-    await Promise.all([loadStats(), loadRecentUsers()]);
-  }
-
-  async function loadStats() {
-    try {
-      const [c, t] = await Promise.all([
-        fetch(API + '/api/admin/stats').then(r => r.json()).catch(() => null),
-        fetch(API + '/api/techniciens/').then(r => r.json()).catch(() => [])
-      ]);
-      if (c) {
-        document.getElementById('st-candidats').textContent = c.candidats || 0;
-        document.getElementById('st-recruteurs').textContent = c.recruteurs || 0;
-        document.getElementById('st-offres').textContent = c.offres || 0;
-        document.getElementById('sb-nb-candidats').textContent = c.candidats || 0;
-        document.getElementById('sb-nb-recruteurs').textContent = c.recruteurs || 0;
-      }
-      const nbTech = Array.isArray(t) ? t.length : 0;
-      document.getElementById('st-techniciens').textContent = nbTech;
-      document.getElementById('sb-nb-techniciens').textContent = nbTech;
-    } catch(e) {}
-  }
-
-  async function loadRecentUsers() {
-    try {
-      const res = await fetch(API + '/api/admin/utilisateurs');
-      const data = await res.json();
-      const tbody = document.getElementById('dash-recent');
-      const recent = (data || []).slice(0, 8);
-      if (!recent.length) { tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--text2);padding:24px;">Aucun utilisateur</td></tr>`; return; }
-      tbody.innerHTML = recent.map(u => `
-        <tr>
-          <td><div class="td-av"><div class="td-avatar" style="background:linear-gradient(135deg,#8a6a20,var(--gold))">${u.nom[0]}</div><div><div class="td-name">${u.nom} ${u.prenom||''}</div><div class="td-sub">${u.email||u.telephone}</div></div></div></td>
-          <td><span class="badge ${u.type==='candidat'?'badge-green':u.type==='recruteur'?'badge-blue':'badge-purple'}">${u.type}</span></td>
-          <td style="color:var(--text2);font-size:0.75rem;">${new Date(u.cree_le).toLocaleDateString('fr-FR')}</td>
-          <td><span class="badge ${u.actif?'badge-green':'badge-red'}">${u.actif?'Actif':'Inactif'}</span></td>
-          <td><div class="action-btns"><button class="btn-act danger" onclick="supprimerUser(${u.id},'${u.nom}')">🗑️</button></div></td>
-        </tr>`).join('');
-    } catch(e) {
-      document.getElementById('dash-recent').innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--text2);padding:24px;">Erreur de chargement</td></tr>`;
-    }
-  }
-
-  async function loadCandidats() {
-    try {
-      const res = await fetch(API + '/api/admin/utilisateurs?type=candidat');
-      const data = await res.json();
-      document.getElementById('candidats-count').textContent = `${data.length} candidat(s) inscrit(s)`;
-      document.getElementById('candidats-tbody').innerHTML = data.map(u => `
-        <tr>
-          <td><div class="td-av"><div class="td-avatar" style="background:linear-gradient(135deg,var(--gold3),var(--gold))">${u.nom[0]}</div><div><div class="td-name">${u.nom} ${u.prenom||''}</div><div class="td-sub">${u.quartier||'—'}</div></div></div></td>
-          <td style="color:var(--text2)">${u.telephone}</td>
-          <td><span class="badge badge-green">Candidat</span></td>
-          <td style="color:var(--text2);font-size:0.75rem;">${new Date(u.cree_le).toLocaleDateString('fr-FR')}</td>
-          <td><span class="badge ${u.actif?'badge-green':'badge-red'}">${u.actif?'✅ Actif':'❌ Inactif'}</span></td>
-          <td><div class="action-btns">
-            <button class="btn-act" onclick="toast('📱 '+${u.telephone})">📱</button>
-            <button class="btn-act danger" onclick="supprimerUser(${u.id},'${u.nom}')">🗑️</button>
-          </div></td>
-        </tr>`).join('');
-    } catch(e) {
-      document.getElementById('candidats-tbody').innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--text2);padding:24px;">Erreur de chargement</td></tr>`;
-    }
-  }
-
-  async function loadRecruteurs() {
-    try {
-      const res = await fetch(API + '/api/admin/utilisateurs?type=recruteur');
-      const data = await res.json();
-      document.getElementById('recruteurs-count').textContent = `${data.length} recruteur(s) inscrit(s)`;
-      document.getElementById('recruteurs-tbody').innerHTML = data.map(u => `
-        <tr>
-          <td><div class="td-av"><div class="td-avatar" style="background:linear-gradient(135deg,#1e40af,#3b82f6);color:#fff">${u.nom[0]}</div><div><div class="td-name">${u.nom}</div><div class="td-sub">${u.email||'—'}</div></div></div></td>
-          <td style="color:var(--text2)">${u.telephone}</td>
-          <td style="color:var(--text2);font-size:0.75rem;">${new Date(u.cree_le).toLocaleDateString('fr-FR')}</td>
-          <td><span class="badge badge-gold">120 000 FCFA/an</span></td>
-          <td><span class="badge ${u.actif?'badge-green':'badge-red'}">${u.actif?'✅ Actif':'❌ Inactif'}</span></td>
-          <td><div class="action-btns">
-            <button class="btn-act danger" onclick="supprimerUser(${u.id},'${u.nom}')">🗑️</button>
-          </div></td>
-        </tr>`).join('');
-    } catch(e) {
-      document.getElementById('recruteurs-tbody').innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--text2);padding:24px;">Erreur de chargement</td></tr>`;
-    }
-  }
-
-  async function loadTechniciens() {
-    try {
-      const res = await fetch(API + '/api/admin/techniciens');
-      const data = await res.json();
-      document.getElementById('techniciens-count').textContent = `${data.length} technicien(s) inscrit(s)`;
-      renderTechniciens(data);
-    } catch(e) {
-      document.getElementById('techniciens-tbody').innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--text2);padding:24px;">Erreur de chargement</td></tr>`;
-    }
-  }
-
-  function renderTechniciens(data) {
-    document.getElementById('techniciens-tbody').innerHTML = data.map(t => `
-      <tr>
-        <td><div class="td-av"><div class="td-avatar" style="background:linear-gradient(135deg,#7c2d12,var(--orange));color:#fff">${t.nom[0]}</div><div><div class="td-name">${t.nom} ${t.prenom||''}</div><div class="td-sub">${t.tarif?t.tarif.toLocaleString()+' FCFA/h':'—'}</div></div></div></td>
-        <td><span class="badge badge-purple">${t.specialite}</span></td>
-        <td style="color:var(--text2)">${t.zone||'—'}</td>
-        <td style="color:var(--text2)">${t.telephone}</td>
-        <td><span class="badge ${t.abonnement_actif?'badge-green':'badge-red'}">${t.abonnement_actif?'✅ Actif':'❌ Inactif'}</span></td>
-        <td><div class="action-btns">
-          ${!t.abonnement_actif ? `<button class="btn-act success" onclick="activerTech(${t.id},'${t.nom}')">✅ Activer</button>` : `<button class="btn-act danger" onclick="desactiverTech(${t.id},'${t.nom}')">⏸️ Désactiver</button>`}
-          <button class="btn-act danger" onclick="supprimerTech(${t.id},'${t.nom}')">🗑️</button>
-        </div></td>
-      </tr>`).join('');
-  }
-
-  async function loadOffres() {
-    try {
-      const res = await fetch(API + '/api/missions/');
-      // missions nécessitent JWT — affichage basique
-      document.getElementById('offres-tbody').innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--text2);padding:24px;">Connexion JWT requise pour voir les offres</td></tr>`;
-    } catch(e) {}
-  }
-
-  // ─── ACTIONS ──────────────────────────────────────────
-  async function activerTech(id, nom) {
-    try {
-      await fetch(API + `/api/techniciens/${id}/activer`, { method: 'POST' });
-      toast(`✅ ${nom} — abonnement activé !`);
-      loadTechniciens();
-    } catch(e) { toast('❌ Erreur activation'); }
-  }
-
-  async function desactiverTech(id, nom) {
-    openConfirm(`Désactiver ${nom} ?`, 'Le technicien ne sera plus visible par les clients.', () => {
-      fetch(API + `/api/techniciens/${id}/desactiver`, { method: 'POST' })
-        .then(() => { toast(`⏸️ ${nom} désactivé`); loadTechniciens(); })
-        .catch(() => toast('❌ Erreur'));
+async function loadUsers() {
+  try {
+    const res = await fetch(API + '/api/admin/users', {
+      headers: {'Authorization': 'Bearer ' + token}
     });
+    if (res.status === 401) { adminLogout(); return; }
+    if (res.ok) {
+      allUsers = await res.json();
+      renderUsers();
+      updateStats();
+    }
+  } catch(e) {
+    document.getElementById('users-tbody').innerHTML = '<tr><td colspan="6" class="empty"><div class="empty-icon">📭</div>Aucun utilisateur</td></tr>';
+  }
+}
+
+function renderUsers() {
+  let users = currentFilter === 'premium' ? allUsers.filter(u => u.premium) : currentFilter === 'inactif' ? allUsers.filter(u => !u.actif) : allUsers;
+  const q = document.getElementById('search-input').value.toLowerCase().trim();
+  const typeFilter = document.getElementById('filter-type').value;
+  if (q) users = users.filter(u => ((u.nom||'') + (u.prenom||'') + (u.email||'') + (u.telephone||'')).toLowerCase().includes(q));
+  if (typeFilter) users = users.filter(u => u.type === typeFilter);
+
+  const tbody = document.getElementById('users-tbody');
+  if (users.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="empty"><div class="empty-icon">🔍</div>Aucun utilisateur trouvé</td></tr>';
+    return;
   }
 
-  function supprimerUser(id, nom) {
-    openConfirm(`Supprimer ${nom} ?`, 'Cette action est irréversible. L\'utilisateur sera définitivement supprimé.', () => {
-      fetch(API + `/api/admin/utilisateurs/${id}`, { method: 'DELETE' })
-        .then(() => { toast(`🗑️ ${nom} supprimé`); loadAll(); })
-        .catch(() => toast('❌ Erreur suppression'));
+  tbody.innerHTML = users.map(u => {
+    const initials = ((u.prenom || '?')[0] + (u.nom || '')[0]).toUpperCase();
+    const date = u.cree_le ? new Date(u.cree_le).toLocaleDateString('fr-FR', {day:'2-digit',month:'short'}) : '-';
+    const statusBadge = u.premium ? '<span class="badge badge-premium">⭐ PREMIUM</span>' : (u.actif !== false ? '<span class="badge badge-active">Actif</span>' : '<span class="badge badge-inactive">Suspendu</span>');
+    return '<tr><td><div class="user-cell"><div class="user-avatar">' + initials + '</div><div><div class="user-name">' + (u.prenom||'') + ' ' + (u.nom||'') + '</div><div class="user-email">' + (u.email||'—') + '</div></div></div></td><td><span class="badge badge-' + u.type + '">' + u.type + '</span></td><td>' + (u.telephone||'-') + '</td><td>' + statusBadge + '</td><td style="font-size:0.8rem;color:var(--text2);">' + date + '</td><td><div class="actions-cell">' + (u.premium ? '<button class="btn-action btn-desactiver" onclick="togglePremium(' + u.id + ', false)">Retirer Premium</button>' : '<button class="btn-action btn-activer" onclick="togglePremium(' + u.id + ', true)">⭐ Activer Premium</button>') + (u.actif !== false ? '<button class="btn-action btn-desactiver" onclick="toggleActif(' + u.id + ', false)">Suspendre</button>' : '<button class="btn-action btn-activer" onclick="toggleActif(' + u.id + ', true)">Réactiver</button>') + '</div></td></tr>';
+  }).join('');
+}
+
+function updateStats() {
+  document.getElementById('stat-total').textContent = allUsers.length;
+  document.getElementById('stat-premium').textContent = allUsers.filter(u => u.premium).length;
+  document.getElementById('stat-candidats').textContent = allUsers.filter(u => u.type === 'candidat').length;
+  document.getElementById('stat-recruteurs').textContent = allUsers.filter(u => u.type === 'recruteur').length;
+  document.getElementById('stat-techniciens').textContent = allUsers.filter(u => u.type === 'technicien').length;
+}
+
+function switchTab(filter, el) {
+  currentFilter = filter;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderUsers();
+}
+
+async function togglePremium(userId, activate) {
+  try {
+    const res = await fetch(API + '/api/admin/users/' + userId + '/premium', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token},
+      body: JSON.stringify({premium: activate})
     });
-  }
+    if (res.ok) { toast(activate ? '⭐ Premium activé !' : 'Premium retiré'); loadUsers(); }
+    else { toast('❌ Erreur'); }
+  } catch(e) { toast('❌ Erreur de connexion'); }
+}
 
-  function supprimerTech(id, nom) {
-    openConfirm(`Supprimer ${nom} ?`, 'Cette action est irréversible.', () => {
-      fetch(API + `/api/admin/techniciens/${id}`, { method: 'DELETE' })
-        .then(() => { toast(`🗑️ ${nom} supprimé`); loadTechniciens(); })
-        .catch(() => toast('❌ Erreur suppression'));
+async function toggleActif(userId, activate) {
+  try {
+    const res = await fetch(API + '/api/admin/users/' + userId + '/actif', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token},
+      body: JSON.stringify({actif: activate})
     });
-  }
+    if (res.ok) { toast(activate ? '✅ Compte réactivé' : '⏸️ Compte suspendu'); loadUsers(); }
+    else { toast('❌ Erreur'); }
+  } catch(e) { toast('❌ Erreur de connexion'); }
+}
 
-  function filterTechniciens(val) {
-    fetch(API + '/api/admin/techniciens')
-      .then(r => r.json())
-      .then(data => {
-        if (val === 'actif') data = data.filter(t => t.abonnement_actif);
-        if (val === 'inactif') data = data.filter(t => !t.abonnement_actif);
-        renderTechniciens(data);
-      });
-  }
+function showMsg(id, text, type) { const el = document.getElementById(id); el.textContent = text; el.className = 'msg show ' + type; }
+function toast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2800); }
 
-  // ─── ACTIVITÉ ─────────────────────────────────────────
-  function renderActivite() {
-    const activites = [
-      { icon:'👤', bg:'rgba(29,185,84,0.1)', title:'Nouveau candidat inscrit', desc:'Jean Ondo — Comptable · Libreville Centre', time:'Il y a 5 min' },
-      { icon:'🔧', bg:'rgba(249,115,22,0.1)', title:'Technicien en attente', desc:'Pierre Moussavou — Plombier · a payé son abonnement', time:'Il y a 12 min' },
-      { icon:'🏢', bg:'rgba(59,130,246,0.1)', title:'Nouveau recruteur', desc:'Total Gabon — a créé son compte', time:'Il y a 34 min' },
-      { icon:'📋', bg:'rgba(201,168,76,0.1)', title:'Nouvelle offre publiée', desc:'Comptable Senior — Total Gabon', time:'Il y a 1 heure' },
-      { icon:'💳', bg:'rgba(139,92,246,0.1)', title:'Abonnement technicien', desc:'Marc Nguema — 10 000 FCFA payés', time:'Il y a 2 heures' },
-      { icon:'👤', bg:'rgba(29,185,84,0.1)', title:'Nouveau candidat inscrit', desc:'Marie Obame — Secrétaire · Owendo', time:'Il y a 3 heures' },
-      { icon:'📋', bg:'rgba(201,168,76,0.1)', title:'Offre pourvue', desc:'Assistant RH — BGFI Bank', time:'Il y a 5 heures' },
-      { icon:'💳', bg:'rgba(59,130,246,0.1)', title:'Abonnement recruteur', desc:'Gabon Telecom — 120 000 FCFA payés', time:'Hier' },
-    ];
-    document.getElementById('act-list').innerHTML = activites.map(a => `
-      <div class="act-item">
-        <div class="act-icon" style="background:${a.bg}">${a.icon}</div>
-        <div class="act-content">
-          <div class="act-title">${a.title}</div>
-          <div class="act-desc">${a.desc}</div>
-          <div class="act-time">${a.time}</div>
-        </div>
-      </div>`).join('');
-  }
-
-  // ─── FILTER TABLE ─────────────────────────────────────
-  function filterTable(tbodyId, query) {
-    const rows = document.getElementById(tbodyId).querySelectorAll('tr');
-    rows.forEach(row => {
-      row.style.display = row.textContent.toLowerCase().includes(query.toLowerCase()) ? '' : 'none';
-    });
-  }
-
-  // ─── MODAL CONFIRM ────────────────────────────────────
-  function openConfirm(title, desc, action) {
-    confirmAction = action;
-    document.getElementById('mc-title').textContent = title;
-    document.getElementById('mc-desc').textContent = desc;
-    document.getElementById('modal-confirm').classList.add('open');
-  }
-
-  function closeConfirm() {
-    document.getElementById('modal-confirm').classList.remove('open');
-    confirmAction = null;
-  }
-
-  function execConfirm() {
-    if (typeof confirmAction === 'function') confirmAction();
-    else if (confirmAction === 'resetDB') toast('🗑️ Réinitialisation annulée (sécurité)');
-    closeConfirm();
-  }
-
-  document.getElementById('modal-confirm').addEventListener('click', e => {
-    if (e.target.id === 'modal-confirm') closeConfirm();
-  });
-
-  // ─── TOAST ────────────────────────────────────────────
-  function toast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg; t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 3000);
-  }
+if (token) showApp();
 </script>
 </body>
 </html>
